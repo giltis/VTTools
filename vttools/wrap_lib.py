@@ -174,11 +174,13 @@ def docstring_func(pyobj):
 sig_map = {
     'ndarray': 'basic:Variant',
     'array': 'basic:Variant',
+    'array_like': 'basic:Variant',
     'np.ndarray': 'basic:Variant',
     'list': 'basic:List',
     'int': 'basic:Integer',
     'integer': 'basic:Integer',
     'float': 'basic:Float',
+    'scalar': 'basic:Float',
     'tuple': 'basic:Tuple',
     'dict': 'basic:Dictionary',
     'bool': 'basic:Boolean',
