@@ -41,7 +41,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from nose.tools import assert_true
-from nsls2.testing.decorators import known_fail_if
+from nsls2.testing.decorators import known_fail_if, skip_if
 from vttools.utils import make_symlink, query_yes_no
 import tempfile
 import os
@@ -56,6 +56,7 @@ def destroy(path):
         call(['rmdir', '/S', path], shell=True)
 
 
+@skip_if(not os.name == 'nt', 'not on window')
 def test_make_symlink():
     test_loc = os.path.join(os.path.expanduser('~'), 'symlinking_test')
     try:
