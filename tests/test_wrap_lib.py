@@ -62,14 +62,33 @@ def eat_porridge(this_sucks, temperature, wtf):
     temperature, porridge : {'too hot', 'too cold', 'just right'}
         The temperature of the porridge
 
-    Returns
-    -------
-    bool
+    output : bool
         If we should eat the porridge
     """
     if temperature  not in {'too hot', 'too cold', 'just right'}:
         raise ValueError("That isn't porridge!")
     return temperature == 'just right'
+
+def porridge_for_the_bears(were_you_robbed):
+    """
+    Did Goldie Locks break in and rob you?
+
+    Parameters
+    ----------
+    were_you_robbed : bool
+        The question is in the title
+
+    Returns
+    _______
+    p_bear_emo, m_bear_emo, b_bear_emo : string
+        The emotional status of the three bears
+    """
+    if were_you_robbed == True:
+        p_bear_emo = 'angry'
+        m_bear_emo, b_bear_emo = 'sad', 'sad'
+    else:
+        p_bear_emo, m_bear_emo, b_bear_emo = 'angry', 'happy', 'happy'
+    return p_bear_emo, m_bear_emo, b_bear_emo
 
 
 def test_obj_src():
@@ -286,7 +305,22 @@ def test_define_input_ports():
 
 
 def test_define_output_ports():
-    pass
+    #Three test cases
+    #1 - make sure we get the correct output
+    doc = wrap_lib.docstring_func(np.diff)
+    output_ports = wrap_lib.define_output_ports(doc._parsed_data)
+    assert_equal(len(output_ports), 1)
+
+    #2 - make sure we get correct output if Returns section is not present
+    # but output is actually present in Parameters section
+    doc = wrap_lib.docstring_func(eat_porridge)
+    output_ports = wrap_lib.define_output_ports(doc._parsed_data)
+    assert_equal(len(output_ports), 1)
+    #3 - make sure multiple return parameters are included correctly when
+    # they are sparated using only a comma
+    doc = wrap_lib.docstring_func(porridge_for_the_bears)
+    output_ports = wrap_lib.define_output_ports(doc._parsed_data)
+    #assert_equal(len(output_ports), 1)
 
 
 def test_gen_module():
