@@ -329,10 +329,10 @@ def _check_alt_types(type_str):
         int if and when required. It is expected that type casting where
         float instead of int will cause problems will have been explicitly
         stipulated to be int, without any ambiguity.
-    2) any complicated or mixed type that includes the option to be a tuple
-        will automatically be cast to tuple. Thus far most of these cases
-        state that the input should be a scalar or a tuple, in which case the
-        scalar input will simply need to be repeated for each array dimension
+    2) any complex type that includes the option to be a tuple will
+        automatically be cast to tuple. Thus far most of these cases state
+        that the input should be a scalar or a tuple, in which case the scalar
+        input will simply need to be repeated for each array dimension
         (e.g. (x,x,x) for a isotropic 3D array type, or (x,x) for a 2D array
         type.
     3) the most unique type cast thus far 'scalar or sequence of scalars'
@@ -388,8 +388,6 @@ def _truncate_description(original_description, word_cnt_to_include):
     short_description : string
         truncated description that will be passed into vistrails
     """
-    if len(original_description) == 0:
-        return ''
     short_description = original_description[0]
     if len(original_description[0].split(' ')) > word_cnt_to_include:
         short_description = (
@@ -425,7 +423,7 @@ def _guess_type(stringy_val):
         try:
             v(stringy_val)
             return k
-        except ValueError:  # I think it's a value error
+        except ValueError:
             pass
     # give up and assume it is a string
     return 'str'
@@ -436,8 +434,9 @@ def define_input_ports(docstring, func):
 
     Parameters
     ----------
-    docstring : NumpyDocString #List of strings?
-        The scraped docstring from the
+    docstring : List of strings?
+        The scraped docstring from the NumpyDocString. This is the output of
+        docstring_func()
 
     func : function
         The actual python function
