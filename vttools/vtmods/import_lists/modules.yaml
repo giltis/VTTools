@@ -69,9 +69,7 @@ autowrap_func:
 - func_name: estimate_d_blind
   module_path: nsls2.calibration
   namespace: calibration
-- func_name: find_ring_center_acorr_iD
-  module_path: nsls2.image
-  namespace: image
+#- func_name: find_ring_center_acorr_iD, module_path: nsls2.image, namespace: image
 
 
 #- {func_name: emission_line_search, module_path: nsls2.constants,  namespace: core, add_input_dict: true}
