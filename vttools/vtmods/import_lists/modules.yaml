@@ -18,6 +18,17 @@ import_modules:
 
 # list of functions to autowrap
 autowrap_func:
+# FILE I/O
+- func_name: read_binary
+  module_path: skxray.io.binary
+  namespace: io
+- func_name: read_amiraMesh
+  module_path: skxray.io.avizo_io
+  namespace: io
+- func_name: read_netCDF
+  module_path: skxray.io.net_cdf_io
+  namespace: io
+
 - func_name: grid3d
   module_path: skxray.core
   namespace: core
@@ -49,9 +60,6 @@ autowrap_func:
 - func_name : pixel_to_phi
   module_path: skxray.core
   namespace: core
-- func_name: read_binary
-  module_path: skxray.io.binary
-  namespace: io
 - func_name: convolve
   module_path: numpy
   namespace: numpy
@@ -184,6 +192,38 @@ autowrap_func:
 - func_name: rotate_volume
   module_path: skxray.api.ff_image
   namespace: image_processing | transform
+# FF IMAGE PROCESSING: LOGICAL OPERATIONS
+- func_name: logical_and
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | logic
+- func_name: logical_or
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | logic
+- func_name: logical_not
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | logic
+- func_name: logical_xor
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | logic
+- func_name: logical_nand
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | logic
+- func_name: logical_subtract
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | logic
+# FF IMAGE PROCESSING: ARITHMETIC OPERATIONS
+- func_name: add
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | arithmetic
+- func_name: subtract
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | arithmetic
+- func_name: multiply
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | arithmetic
+- func_name: divide
+  module_path: skxray.api.ff_image
+  namespace: image_processing | math | arithmetic
 
 
 #- {func_name: emission_line_search, module_path: skxray.constants,  namespace: core, add_input_dict: true}
