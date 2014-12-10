@@ -57,7 +57,7 @@ def load_data(file_name, slices_start, slices_end, data_center):
     data_center : float
         center of projections
 
-    Returns:
+    Returns
     ----------
     d : array_like
         stores the XTomoDataset object with input dataset loaded
@@ -219,15 +219,18 @@ def save_data(dataset, file_name, axis=0):
 
     axis : int
         the axis to read along the images
+
+    Returns
+    ----------
+    dataset : array_like
+        dataset with attribute "data_recon" computed
+
     """
+
     # Write to stack of TIFFs.
-    tomopy.xtomo_writer(d.data_recon, file_name, axis)
+    tomopy.xtomo_writer(dataset.data_recon, file_name, axis=axis)
 
-mod = sys.modules[__name__]
-function_list = [load_data]
-
-for func_name in function_list:
-    setattr(mod, func_name.__name__, func_name)
+    return dataset
 
 if __name__ == "__main__":
     d = load_data('home/wxu/tomopy/demo/data.h5', 0, 16, 661.5)
