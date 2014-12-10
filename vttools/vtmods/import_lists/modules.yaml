@@ -74,6 +74,116 @@ autowrap_func:
 - func_name: estimate_d_blind
   module_path: skxray.calibration
   namespace: calibration
+#- func_name: find_ring_center_acorr_iD
+#  module_path: skxray.image
+#  namespace: image
+# FF IMAGE PROCESSING: FILTER TOOLS
+- func_name: gaussian_filter
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: median_filter
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: minimum_filter
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: maximum_filter
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: gaussian_gradient_magnitude
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: gaussian_laplace
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: laplace
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: percentile_filter
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: sobel
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: prewitt
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+- func_name: rank_filter
+  module_path: skxray.api.ff_image
+  namespace: image_processing | filtering
+# FF IMAGE PROCESSING: HISTOGRAM TOOLS
+- func_name: hist_make
+  module_path: skxray.api.ff_image
+  namespace: image_processing | histogram
+- func_name: rescale_intensity_values
+  module_path: skxray.api.ff_image
+  namespace: image_processing | histogram
+# FF IMAGE PROCESSING: MORPHOLOGY MANIPULATION
+- func_name: binary_opening
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: binary_closing
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: binary_erosion
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: binary_dilation
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: grey_opening
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: grey_closing
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: grey_erosion
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: grey_dilation
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: binary_fill_holes
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+- func_name: binary_propagation
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology
+# FF IMAGE PROCESSING: THRESHOLDING TOOLS
+- func_name: thresh_globalGT
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+- func_name: thresh_globalLT
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+- func_name: thresh_bounded
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+- func_name: thresh_adapt
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+- func_name: thresh_otsu
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+- func_name: thresh_yen
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+- func_name: thresh_isodata
+  module_path: skxray.api.ff_image
+  namespace: image_processing | thresholding
+# FF IMAGE PROCESSING: TRANSFORMATION TOOLS
+- func_name: swap_axes
+  module_path: skxray.api.ff_image
+  namespace: image_processing | transform
+- func_name: flip_axis
+  module_path: skxray.api.ff_image
+  namespace: image_processing | transform
+- func_name: crop_volume
+  module_path: skxray.api.ff_image
+  namespace: image_processing | transform
+- func_name: rotate_volume
+  module_path: skxray.api.ff_image
+  namespace: image_processing | transform
 
 
 #- {func_name: emission_line_search, module_path: skxray.constants,  namespace: core, add_input_dict: true}
