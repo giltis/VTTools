@@ -219,18 +219,10 @@ def save_data(dataset, file_name, axis=0):
 
     axis : int
         the axis to read along the images
-
-    Returns
-    ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
-
     """
 
     # Write to stack of TIFFs.
     tomopy.xtomo_writer(dataset.data_recon, file_name, axis=axis)
-
-    return dataset
 
 if __name__ == "__main__":
     d = load_data('home/wxu/tomopy/demo/data.h5', 0, 16, 661.5)
