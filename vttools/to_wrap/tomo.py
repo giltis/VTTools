@@ -224,11 +224,3 @@ def save_data(dataset, file_name, axis=0):
     # Write to stack of TIFFs.
     tomopy.xtomo_writer(dataset.data_recon, file_name, axis=axis)
 
-if __name__ == "__main__":
-    d = load_data('home/wxu/tomopy/demo/data.h5', 0, 16, 661.5)
-    d = normalize(d)
-    d = correct_drift(d)
-    d = phase_retrieval(d)
-    d = correct_drift(d)
-    d = gridrec(d)
-    save_data(d, 'tmp/recon_')
