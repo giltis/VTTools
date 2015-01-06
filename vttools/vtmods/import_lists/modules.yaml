@@ -28,6 +28,12 @@ autowrap_func:
 - func_name: read_netCDF
   module_path: skxray.io.net_cdf_io
   namespace: io
+- func_name: read_tiff
+  module_path: skxray.io.tiff_io
+  namespace: io
+- func_name: save_tiff
+  module_path: skxray.io.tiff_io
+  namespace: io
 
 - func_name: grid3d
   module_path: skxray.core
@@ -129,34 +135,40 @@ autowrap_func:
 # FF IMAGE PROCESSING: MORPHOLOGY MANIPULATION
 - func_name: binary_opening
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | binary
 - func_name: binary_closing
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | binary
 - func_name: binary_erosion
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | binary
 - func_name: binary_dilation
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | binary
 - func_name: grey_opening
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | grayscale
 - func_name: grey_closing
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | grayscale
 - func_name: grey_erosion
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | grayscale
 - func_name: grey_dilation
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | grayscale
 - func_name: binary_fill_holes
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | binary
 - func_name: binary_propagation
   module_path: skxray.api.ff_image
-  namespace: image_processing | morphology
+  namespace: image_processing | morphology | binary
+- func_name: extract_material
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology | material manipulation
+- func_name: extract_all_else
+  module_path: skxray.api.ff_image
+  namespace: image_processing | morphology | material manipulation
 # FF IMAGE PROCESSING: THRESHOLDING TOOLS
 - func_name: thresh_globalGT
   module_path: skxray.api.ff_image
