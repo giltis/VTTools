@@ -33,17 +33,19 @@
 # POSSIBILITY OF SUCH DAMAGE.                                          #
 ########################################################################
 from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+                        )
+import enaml
+
 import six
-from bubblegum.qt_widgets import query_widget
+
 from logging import Handler
 from vistrails import api
 from vistrails.core.modules.vistrails_module import Module, ModuleSettings
 from vistrails.core.modules.config import IPort, OPort
-from .broker import search_keys_dict
 from .broker import search
 import numpy as np
 from metadataStore.utilities.utility import get_data_keys
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -68,7 +70,8 @@ def add_to_canvas(query_dict, unique_query_dict, single_result):
     mod_dict = api.add_module(0, -200, 'org.vistrails.vistrails.NSLS2',
                               'CalibrationParameters', 'broker')
     # connect the broker to the dict
-    api.add_connection(mod_broker.id, 'query_result', mod_dict.id, 'run_header')
+    api.add_connection(mod_broker.id, 'query_result',
+                       mod_dict.id, 'run_header')
 
     # get the datakeys from the run header
     data_keys = get_data_keys(single_result)
@@ -153,6 +156,13 @@ def search_databroker(search_dict):
 #                                             unique_id_func=gen_unique_id)
 
 
+from bubblegum.xrf.model.xrf_model import XRF
+with enaml.imports():
+    from bubblegum.xrf.view.xrf_view import XrfGui
+
+xrf_view = XrfGui()
+xrf_view.xrf_model = XRF()
+
 def setup_bnl_menu():
     """
     Creates and hooks up a BNL specific menu in the main window
@@ -162,10 +172,14 @@ def setup_bnl_menu():
     menu_bar = bw.menuBar()
 
     bnl_menu = menu_bar.addMenu("BNL")
+    print('\n\n\n\n\n\nBNL Menu Added\n\n\n\n\n\n\n\n\n')
 
     def foo():
         print('menu bar clicked!')
         # query_window.show()
+        xrf_view.show()
+
+
     bnl_menu.addAction("demo", foo)
 
 
@@ -302,7 +316,8 @@ class Crop2D(Module):
               label='pixel coordinate of the row of the bottom right corner',
               signature='basic:Integer'),
         IPort(name='bottom_right_column',
-              label='pixel coordinate of the column of the bottom right corner',
+              label=('pixel coordinate of the column of the ' +
+                     'bottom right corner'),
               signature='basic:Integer'),
     ]
     _output_ports = [

@@ -38,8 +38,8 @@ Created on Apr 29, 2014
 from vistrails.core.modules.vistrails_module import (Module, ModuleSettings,
                                                      ModuleError)
 from vistrails.core.modules.config import IPort, OPort
-from pims.extern.tifffile import imread
-from nsls2.io.binary import read_binary
+from tifffile import imread
+from skxray.io.binary import read_binary
 import numpy as np
 
 import logging

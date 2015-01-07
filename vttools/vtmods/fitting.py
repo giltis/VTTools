@@ -36,34 +36,34 @@
 from __future__ import (absolute_import, division, print_function,
                         )
 import six
-import os
-import yaml
+from vistrails.core.modules.vistrails_module import Module, ModuleSettings
+from vistrails.core.modules.config import IPort, OPort
 import logging
 logger = logging.getLogger(__name__)
 
-
-def load_config(yaml_file=None):
-    """Read and return yaml_file
-
-    If yaml_file is not provided, this function reads the 'modules.yaml'
-    file in this directory
-
-    Parameters
-    ----------
-    yaml_file : str, optional
-        Import configuration file to read in and return
-
-    Returns
-    -------
-    import_dict : dict
-        Dictionary describing the functions/classes/Modules that should be
-        available in VisTrails
+class ModelAggregator(Module):
+    """Combine 1+ models into an aggregate model
     """
-    if yaml_file is None:
-        yaml_file = os.path.join((os.path.dirname(os.path.realpath(__file__))),
-                                 'modules.yaml')
-    # read yaml modules
-    with open(yaml_file, 'r') as modules:
-        import_dict = yaml.load(modules)
-        print('import_dict: {0}'.format(import_dict))
-        return import_dict
+    _settings = ModuleSettings(namespace='fitting')
+    _input_ports = [
+        IPort(name='models', label='models to aggregate',
+              signature='basic:Variant')
+    ]
+    _output_ports = [
+        OPort(name='aggregated_models', signature='basic:Variant')
+    ]
+    def compute(self):
+        """Mandatory override of parent `Module` class.
+
+        Loop over however many models are connected to the 'models' input port
+        and combine them into a single aggregate model
+        """
+        models = self.get_input_list('models')
+        aggregated = models[0]
+        if len(models) > 2:
+            for model in models[1:]:
+                aggregated += model
+        self.set_output('aggregated_models', aggregated)
+
+def vistrails_modules():
+    return [ModelAggregator,]
