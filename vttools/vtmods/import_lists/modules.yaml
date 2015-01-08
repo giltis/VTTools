@@ -97,6 +97,9 @@ autowrap_func:
 - func_name: normalize
   module_path: vttools.to_wrap.tomo
   namespace: tomography
+- func_name: new_norm
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
 - func_name: correct_drift
   module_path: vttools.to_wrap.tomo
   namespace: tomography
