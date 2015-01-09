@@ -458,7 +458,7 @@ def phase_retrieval_new(data, theta, center):
 
     theta : np.ndarray
         the angle list of projections
-
+s
     center : float
         center of projections
     """
