@@ -41,34 +41,6 @@ import numpy as np
 import tomopy
 import logging
 
-def new_norm(data, white, dark, theta):
-    """new loading function
-
-    Parameters
-    ----------
-    data : np.ndarray
-        filename of input HDF5 file
-
-    white : np.ndarray
-        starting index of image stacks (3D)
-
-    dark : np.ndarray
-        ending index of image stacks (3D)
-
-    theta : np.ndarray
-        center of projections
-
-    Returns
-    ----------
-    out : np.ndarray
-        stores the XTomoDataset object with input dataset loaded
-    """
-
-    d = tomopy.xtomo_dataset(log='debug')
-    d.dataset(data, white, dark, theta)
-    out = d.normalize(overwrite=False)
-
-    return out
 
 def load_data(file_name, slices_start, slices_end, data_center):
     """Read data from HDF5 file
@@ -160,7 +132,7 @@ def phase_retrieval(dataset):
 
     return dataset
 
-def diagnose_center(dataset, center_start, center_end):
+def optimize_center(dataset, center_init):
     """Find center of projections
 
     Parameters
@@ -168,18 +140,15 @@ def diagnose_center(dataset, center_start, center_end):
     dataset : array_like
         input dataset without drift correction
 
-    center_start : float
-        lower bound of center
-
-    center_end : float
-        upper bound of center
+    center_init : float
+        initial value of center
 
     Returns
     ----------
     dataset : array_like
         object with attribute "center" updated
     """
-    dataset.diagnose_center()
+    dataset.optimize_center()
 
     return dataset
 

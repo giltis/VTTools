@@ -97,16 +97,13 @@ autowrap_func:
 - func_name: normalize
   module_path: vttools.to_wrap.tomo
   namespace: tomography
-- func_name: new_norm
-  module_path: vttools.to_wrap.tomo
-  namespace: tomography
 - func_name: correct_drift
   module_path: vttools.to_wrap.tomo
   namespace: tomography
 - func_name: phase_retrieval
   module_path: vttools.to_wrap.tomo
   namespace: tomography
-- func_name: diagnose_center
+- func_name: optimize_center
   module_path: vttools.to_wrap.tomo
   namespace: tomography
 - func_name: gridrec
@@ -116,6 +113,33 @@ autowrap_func:
   module_path: vttools.to_wrap.tomo
   namespace: tomography
 - func_name: art
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: load_data_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: save_data_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: normalize_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: correct_drift_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: phase_retrieval_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: optimize_center_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: gridrec_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: sirt_new
+  module_path: vttools.to_wrap.tomo
+  namespace: tomography
+- func_name: art_new
   module_path: vttools.to_wrap.tomo
   namespace: tomography
 
