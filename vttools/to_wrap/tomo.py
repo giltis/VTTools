@@ -132,7 +132,7 @@ def phase_retrieval(dataset):
 
     return dataset
 
-def optimize_center(dataset, center_init):
+def optimize_center(dataset, center_init=None):
     """Find center of projections
 
     Parameters
@@ -140,7 +140,7 @@ def optimize_center(dataset, center_init):
     dataset : array_like
         input dataset without drift correction
 
-    center_init : float
+    center_init : float, optional
         initial value of center
 
     Returns
@@ -178,7 +178,7 @@ def sirt(dataset, iters=1):
     dataset : array_like
         input dataset
 
-    iters : int
+    iters : int, optional
         number of iterations
 
     Returns
@@ -199,7 +199,7 @@ def art(dataset, iters=1):
     dataset : array_like
         input dataset
 
-    iters : int
+    iters : int, optional
         the number of iterations
 
     Returns
@@ -223,7 +223,7 @@ def save_data(dataset, file_name, axis=0):
     file_name : str
         name of output file
 
-    axis : int
+    axis : int, optional
         the axis to read along the images
     """
 
@@ -232,7 +232,7 @@ def save_data(dataset, file_name, axis=0):
 
 ########
 
-def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=None, recon=None):
+def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=None, recon=None, log_mode='info'):
     """Generate xtomo_dataset object internally to enable passing only ndarrays
 
     Parameters
@@ -255,6 +255,9 @@ def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=
     recon : np.ndarray
         the reconstructed data
 
+    log_mode : string
+        the logging mode: debug, info, error, warn, and warning
+
     Returns
     ----------
     dataset : array_like
@@ -262,23 +265,24 @@ def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=
     """
 
     # create xtomo_dataset object and initialize it
-    d = tomopy.xtomo_dataset(log='debug')
-    if data:
+    d = tomopy.xtomo_dataset(log=log_mode)
+
+    if data is not None:
         d.data = data
 
-    if white:
+    if white is not None:
         d.data_white = white
 
-    if dark:
+    if dark is not None:
         d.data_dark = dark
 
-    if theta:
+    if theta is not None:
         d.theta = theta
 
-    if center:
+    if center is not None:
         d.center = center
 
-    if recon:
+    if recon is not None:
         d.recon_data = recon
 
     return d
@@ -415,7 +419,7 @@ def correct_drift_new(data, theta, center):
 def phase_retrieval_new(data, theta, center):
     """Phase retrievel
 
-    Parameterss
+    Parameters
     ----------
     data : np.ndarray
         input projections of the sample
@@ -456,7 +460,7 @@ def optimize_center_new(data, theta, center_init=None):
     theta : np.ndarray
         the angle list of projections
 
-    center_init : float
+    center_init : float, optional
         initial center of projections
 
     Returns
@@ -519,7 +523,7 @@ def sirt_new(data, theta, center, iters=1):
     center : float
         the center of projections
 
-    iters : int
+    iters : int, optional
         the number of iterations
 
     Returns
@@ -549,7 +553,7 @@ def art_new(data, theta, center, iters=1):
     center : float
         the center of projections
 
-    iters : int
+    iters : int, optional
         the number of iterations
 
     Returns
@@ -576,7 +580,7 @@ def save_data_new(data_recon, file_name, axis=0):
     file_name : str
         name of output file
 
-    axis : int
+    axis : int, optional
         the axis to read along the images
     """
 
