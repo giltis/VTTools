@@ -343,7 +343,7 @@ def load_data_new(file_name, slices_start, slices_end, data_center):
 
     return data, white, dark, theta, center
 
-def normalize_new(data, white, dark, theta, center):
+def normalize_new(data, white, dark):
     """Normalize input dataset
 
     Parameters
@@ -357,31 +357,19 @@ def normalize_new(data, white, dark, theta, center):
     dark : np.ndarray
         dark background
 
-    theta : np.ndarray
-        the angle list of projections
-
-    center : float
-        center of projections
-
     Returns
     ----------
     data : np.ndarray
         loaded raw input projections of the sample
-
-    theta : np.ndarray
-        the angle list of projections
-
-    center : float
-        center of projections
     """
 
     # create xtomo_dataset object and initialize it
-    d = _generate_xtomo_object(data, white, dark, theta, center)
+    d = _generate_xtomo_object(data, white, dark)
 
     # normalize the data with multi-threading supported
     data = d.normalize(overwrite=False)
 
-    return data, theta, center
+    return data
 
 def correct_drift_new(data, theta, center):
     """Drift correction
@@ -401,12 +389,6 @@ def correct_drift_new(data, theta, center):
     ----------
     data : np.ndarray
         updated projection data
-
-    theta : np.ndarray
-        the angle list of projections
-
-    center : float
-        center of projections
     """
 
     # create xtomo_dataset object and initialize it
@@ -414,7 +396,7 @@ def correct_drift_new(data, theta, center):
 
     data = d.correct_drift(overwrite=False)
 
-    return data, theta, center
+    return data
 
 def phase_retrieval_new(data, theta, center):
     """Phase retrievel
@@ -434,12 +416,6 @@ def phase_retrieval_new(data, theta, center):
     ----------
     data : np.ndarray
         updated projection data
-
-    theta : np.ndarray
-        the angle list of projections
-
-    center : float
-        center of projections
     """
 
     # create xtomo_dataset object and initialize it
@@ -447,7 +423,7 @@ def phase_retrieval_new(data, theta, center):
 
     data = d.phase_retrieval(overwrite=False)
 
-    return data, theta, center
+    return data
 
 def optimize_center_new(data, theta, center_init=None):
     """Find the center of projections
@@ -468,9 +444,6 @@ def optimize_center_new(data, theta, center_init=None):
     data : np.ndarray
         updated projection data
 
-    theta : np.ndarray
-        the angle list of projections
-
     center : float
         center of projections
     """
@@ -480,7 +453,7 @@ def optimize_center_new(data, theta, center_init=None):
 
     center = d.optimize_center(center_init=center_init, overwrite=False)
 
-    return data, theta, center
+    return data, center
 
 def gridrec_new(data, theta, center):
     """GridRec reconstruction
@@ -509,13 +482,19 @@ def gridrec_new(data, theta, center):
 
     return data_recon
 
-def sirt_new(data, theta, center, iters=1):
+def sirt_new(data, white, dark, theta, center, iters=1):
     """SIRT reconstruction
 
     Parameters
     ----------
     data : np.ndarray
         input projections of the sample
+
+    white : np.ndarray
+        white background
+
+    dark : np.ndarray
+        dark background
 
     theta : np.ndarray
         the angle list of projections
@@ -533,19 +512,25 @@ def sirt_new(data, theta, center, iters=1):
     """
 
     # create xtomo_dataset object and initialize it
-    d = _generate_xtomo_object(data=data, theta=theta, center=center)
+    d = _generate_xtomo_object(data=data, white=white, dark=dark, theta=theta, center=center)
 
     data_recon = d.sirt(iters=iters, overwrite=False)
 
     return data_recon
 
-def art_new(data, theta, center, iters=1):
+def art_new(data, white, dark, theta, center, iters=1):
     """ART reconstruction
 
     Parameters
     ----------
     data : np.ndarray
         input projections of the sample
+
+    white : np.ndarray
+        white background
+
+    dark : np.ndarray
+        dark background
 
     theta : np.ndarray
         the angle list of projections
@@ -563,7 +548,7 @@ def art_new(data, theta, center, iters=1):
     """
 
     # create xtomo_dataset object and initialize it
-    d = _generate_xtomo_object(data=data, theta=theta, center=center)
+    d = _generate_xtomo_object(data=data, white=white, dark=dark, theta=theta, center=center)
 
     data_recon = d.art(iters=iters, overwrite=False)
 
