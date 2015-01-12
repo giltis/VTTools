@@ -201,7 +201,7 @@ def gridrec(dataset):
 
     return dataset
 
-def sirt(dataset):
+def sirt(dataset, iters=1):
     """SIRT reconstruction
 
     Parameters
@@ -209,23 +209,29 @@ def sirt(dataset):
     dataset : array_like
         input dataset
 
+    iters : int
+        number of iterations
+
     Returns
     ----------
     dataset : array_like
         dataset with attribute "data_recon" computed
     """
 
-    dataset.sirt()
+    dataset.sirt(iters=iters)
 
     return dataset
 
-def art(dataset):
+def art(dataset, iters=1):
     """Art reconstruction
 
     Parameters
     ----------
     dataset : array_like
         input dataset
+
+    iters : int
+        the number of iterations
 
     Returns
     ----------
@@ -440,7 +446,7 @@ def correct_drift_new(data, theta, center):
 def phase_retrieval_new(data, theta, center):
     """Phase retrievel
 
-    Parameters
+    Parameterss
     ----------
     data : np.ndarray
         input projections of the sample
@@ -458,7 +464,7 @@ def phase_retrieval_new(data, theta, center):
 
     theta : np.ndarray
         the angle list of projections
-s
+
     center : float
         center of projections
     """
@@ -470,90 +476,133 @@ s
 
     return data, theta, center
 
-def diagnose_center(dataset, center_start, center_end):
-    """Find center of projections
+def optimize_center_new(data, theta, center_init=None):
+    """Find the center of projections
 
     Parameters
     ----------
-    dataset : array_like
-        input dataset without drift correction
+    data : np.ndarray
+        input projections of the sample
 
-    center_start : float
-        lower bound of center
+    theta : np.ndarray
+        the angle list of projections
 
-    center_end : float
-        upper bound of center
+    center_init : float
+        initial center of projections
 
     Returns
     ----------
-    dataset : array_like
-        object with attribute "center" updated
+    data : np.ndarray
+        updated projection data
+
+    theta : np.ndarray
+        the angle list of projections
+
+    center : float
+        center of projections
     """
-    dataset.diagnose_center()
 
-    return dataset
+    # create xtomo_dataset object and initialize it
+    d = _generate_xtomo_object(data=data, theta=theta)
 
-def gridrec(dataset):
+    center = d.optimize_center(center_init=center_init, overwrite=False)
+
+    return data, theta, center
+
+def gridrec_new(data, theta, center):
     """GridRec reconstruction
 
     Parameters
     ----------
-    dataset : array_like
-        input dataset
+    data : np.ndarray
+        input projections of the sample
+
+    theta : np.ndarray
+        the angle list of projections
+
+    center : float
+        the center of projections
 
     Returns
     ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
+    data_recon : np.ndarray
+        the reconstructed data by GridRec algorithm
     """
 
-    dataset.gridrec()
+    # create xtomo_dataset object and initialize it
+    d = _generate_xtomo_object(data=data, theta=theta, center=center)
 
-    return dataset
+    data_recon = d.gridrec(overwrite=False)
 
-def sirt(dataset):
+    return data_recon
+
+def sirt_new(data, theta, center, iters=1):
     """SIRT reconstruction
 
     Parameters
     ----------
-    dataset : array_like
-        input dataset
+    data : np.ndarray
+        input projections of the sample
+
+    theta : np.ndarray
+        the angle list of projections
+
+    center : float
+        the center of projections
+
+    iters : int
+        the number of iterations
 
     Returns
     ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
+    data_recon : np.ndarray
+        the reconstructed data by SIRT algorithm
     """
 
-    dataset.sirt()
+    # create xtomo_dataset object and initialize it
+    d = _generate_xtomo_object(data=data, theta=theta, center=center)
 
-    return dataset
+    data_recon = d.sirt(iters=iters, overwrite=False)
 
-def art(dataset):
-    """Art reconstruction
+    return data_recon
+
+def art_new(data, theta, center, iters=1):
+    """ART reconstruction
 
     Parameters
     ----------
-    dataset : array_like
-        input dataset
+    data : np.ndarray
+        input projections of the sample
+
+    theta : np.ndarray
+        the angle list of projections
+
+    center : float
+        the center of projections
+
+    iters : int
+        the number of iterations
 
     Returns
     ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
+    data_recon : np.ndarray
+        the reconstructed data by ART algorithm
     """
 
-    dataset.art()
+    # create xtomo_dataset object and initialize it
+    d = _generate_xtomo_object(data=data, theta=theta, center=center)
 
-    return dataset
+    data_recon = d.art(iters=iters, overwrite=False)
 
-def save_data(dataset, file_name, axis=0):
+    return data_recon
+
+def save_data_new(data_recon, file_name, axis=0):
     """Write reconstructed data to stack of tif files
 
     Parameters
     ----------
-    dataset : array_like
-        input dataset
+    data_recon : np.ndarray
+        output reconstructed data
 
     file_name : str
         name of output file
@@ -563,5 +612,5 @@ def save_data(dataset, file_name, axis=0):
     """
 
     # Write to stack of TIFFs.
-    tomopy.xtomo_writer(dataset.data_recon, file_name, axis=axis)
+    tomopy.xtomo_writer(data_recon, file_name, axis=axis)
 
