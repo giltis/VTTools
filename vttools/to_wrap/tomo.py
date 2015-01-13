@@ -41,197 +41,6 @@ import numpy as np
 import tomopy
 import logging
 
-
-def load_data(file_name, slices_start, slices_end, data_center):
-    """Read data from HDF5 file
-
-    Parameters
-    ----------
-    file_name : str
-        filename of input HDF5 file
-
-    slices_start : int
-        starting index of image stacks (3D)
-
-    slices_end : int
-        ending index of image stacks (3D)
-
-    data_center : float
-        center of projections
-
-    Returns
-    ----------
-    d : array_like
-        stores the XTomoDataset object with input dataset loaded
-    """
-
-    # Xtomo reader reads data from HDF5 file
-    data, white, dark, theta = tomopy.xtomo_reader(file_name,
-                                                   slices_start=slices_start,
-                                                   slices_end=slices_end)
-
-    # Create Xtomo dataset object
-    d = tomopy.xtomo_dataset(log='debug')
-    d.dataset(data, white, dark, theta)
-
-    d.center = data_center
-
-    return d
-
-def normalize(dataset):
-    """Normalize input dataset
-
-    Parameters
-    ----------
-    dataset : array_like
-        raw input dataset
-
-    Returns
-    ----------
-    dataset : array_like
-        normalized input dataset
-    """
-
-    dataset.normalize()
-
-    return dataset
-
-def correct_drift(dataset):
-    """Drift correction
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset without drift correction
-
-    Returns
-    ----------
-    dataset : array_like
-        input dataset with drift correction
-    """
-
-    dataset.correct_drift()
-
-    return dataset
-
-def phase_retrieval(dataset):
-    """Phase retrieval
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset
-
-    Returns
-    ----------
-    dataset : array_like
-        input dataset after phase retrieval
-    """
-
-    dataset.phase_retrieval()
-
-    return dataset
-
-def optimize_center(dataset, center_init=None):
-    """Find center of projections
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset without drift correction
-
-    center_init : float, optional
-        initial value of center
-
-    Returns
-    ----------
-    dataset : array_like
-        object with attribute "center" updated
-    """
-    dataset.optimize_center()
-
-    return dataset
-
-def gridrec(dataset):
-    """GridRec reconstruction
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset
-
-    Returns
-    ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
-    """
-
-    dataset.gridrec()
-
-    return dataset
-
-def sirt(dataset, iters=1):
-    """SIRT reconstruction
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset
-
-    iters : int, optional
-        number of iterations
-
-    Returns
-    ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
-    """
-
-    dataset.sirt(iters=iters)
-
-    return dataset
-
-def art(dataset, iters=1):
-    """Art reconstruction
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset
-
-    iters : int, optional
-        the number of iterations
-
-    Returns
-    ----------
-    dataset : array_like
-        dataset with attribute "data_recon" computed
-    """
-
-    dataset.art()
-
-    return dataset
-
-def save_data(dataset, file_name, axis=0):
-    """Write reconstructed data to stack of tif files
-
-    Parameters
-    ----------
-    dataset : array_like
-        input dataset
-
-    file_name : str
-        name of output file
-
-    axis : int, optional
-        the axis to read along the images
-    """
-
-    # Write to stack of TIFFs.
-    tomopy.xtomo_writer(dataset.data_recon, file_name, axis=axis)
-
-########
-
 def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=None, recon=None, log_mode='info'):
     """Generate xtomo_dataset object internally to enable passing only ndarrays
 
@@ -267,6 +76,7 @@ def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=
     # create xtomo_dataset object and initialize it
     d = tomopy.xtomo_dataset(log=log_mode)
 
+    # assign parameters
     if data is not None:
         d.data = data
 
@@ -288,7 +98,7 @@ def _generate_xtomo_object(data=None, white=None, dark=None, theta=None, center=
     return d
 
 
-def load_data_new(file_name, slices_start, slices_end, data_center):
+def load_data(file_name, slices_start=0, slices_end=None, data_center=None):
     """Read data from HDF5 file
 
     Parameters
@@ -296,13 +106,13 @@ def load_data_new(file_name, slices_start, slices_end, data_center):
     file_name : str
         filename of input HDF5 file
 
-    slices_start : int
+    slices_start : int, optional
         starting index of image stacks (3D)
 
-    slices_end : int
+    slices_end : int, optional
         ending index of image stacks (3D)
 
-    data_center : float
+    data_center : float, optional
         center of projections
 
     Returns
@@ -330,20 +140,26 @@ def load_data_new(file_name, slices_start, slices_end, data_center):
 
     # Create Xtomo dataset object
     d = tomopy.xtomo_dataset(log='debug')
+
     # dataset function does additional operations to make sure the loaded data are correct
     d.dataset(data, white, dark, theta)
-    d.center = data_center
 
     # prepare return values
     data = d.data
     white = d.data_white
     dark = d.data_dark
     theta = d.theta
+
+    if data_center is None:
+        d.optimize_center()
+    else:
+        d.center = data_center
+
     center = d.center
 
     return data, white, dark, theta, center
 
-def normalize_new(data, white, dark):
+def normalize(data, white, dark):
     """Normalize input dataset
 
     Parameters
@@ -371,7 +187,7 @@ def normalize_new(data, white, dark):
 
     return data
 
-def correct_drift_new(data, theta, center):
+def correct_drift(data, theta, center):
     """Drift correction
 
     Parameters
@@ -398,7 +214,7 @@ def correct_drift_new(data, theta, center):
 
     return data
 
-def phase_retrieval_new(data, theta, center):
+def phase_retrieval(data, theta, center):
     """Phase retrievel
 
     Parameters
@@ -425,37 +241,7 @@ def phase_retrieval_new(data, theta, center):
 
     return data
 
-def optimize_center_new(data, theta, center_init=None):
-    """Find the center of projections
-
-    Parameters
-    ----------
-    data : np.ndarray
-        input projections of the sample
-
-    theta : np.ndarray
-        the angle list of projections
-
-    center_init : float, optional
-        initial center of projections
-
-    Returns
-    ----------
-    data : np.ndarray
-        updated projection data
-
-    center : float
-        center of projections
-    """
-
-    # create xtomo_dataset object and initialize it
-    d = _generate_xtomo_object(data=data, theta=theta)
-
-    center = d.optimize_center(center_init=center_init, overwrite=False)
-
-    return data, center
-
-def gridrec_new(data, theta, center):
+def gridrec(data, theta, center):
     """GridRec reconstruction
 
     Parameters
@@ -482,7 +268,7 @@ def gridrec_new(data, theta, center):
 
     return data_recon
 
-def sirt_new(data, white, dark, theta, center, iters=1):
+def sirt(data, white, dark, theta, center, iters=1):
     """SIRT reconstruction
 
     Parameters
@@ -518,7 +304,7 @@ def sirt_new(data, white, dark, theta, center, iters=1):
 
     return data_recon
 
-def art_new(data, white, dark, theta, center, iters=1):
+def art(data, white, dark, theta, center, iters=1):
     """ART reconstruction
 
     Parameters
@@ -554,7 +340,7 @@ def art_new(data, white, dark, theta, center, iters=1):
 
     return data_recon
 
-def save_data_new(data_recon, file_name, axis=0):
+def save_data(data_recon, file_name, axis=0):
     """Write reconstructed data to stack of tif files
 
     Parameters
@@ -572,3 +358,176 @@ def save_data_new(data_recon, file_name, axis=0):
     # Write to stack of TIFFs.
     tomopy.xtomo_writer(data_recon, file_name, axis=axis)
 
+########################################
+# Old interface for tomography package #
+########################################
+# def load_data(file_name, slices_start=0, slices_end=None, data_center=None):
+#     """Read data from HDF5 file
+#
+#     Parameters
+#     ----------
+#     file_name : str
+#         filename of input HDF5 file
+#
+#     slices_start : int, optional
+#         starting index of image stacks (3D)
+#
+#     slices_end : int, optional
+#         ending index of image stacks (3D)
+#
+#     data_center : float, optional
+#         center of projections
+#
+#     Returns
+#     ----------
+#     d : array_like
+#         stores the XTomoDataset object with input dataset loaded
+#     """
+#
+#     # Xtomo reader reads data from HDF5 file
+#     data, white, dark, theta = tomopy.xtomo_reader(file_name,
+#                                                    slices_start=slices_start,
+#                                                    slices_end=slices_end)
+#
+#     # Create Xtomo dataset object
+#     d = tomopy.xtomo_dataset(log='debug')
+#     d.dataset(data, white, dark, theta)
+#
+#     if data_center is None:
+#         d.optimize_center()
+#     else:
+#         d.center = data_center
+#
+#     return d
+#
+# def normalize(dataset):
+#     """Normalize input dataset
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         raw input dataset
+#
+#     Returns
+#     ----------
+#     dataset : array_like
+#         normalized input dataset
+#     """
+#
+#     dataset.normalize()
+#
+#     return dataset
+#
+# def correct_drift(dataset):
+#     """Drift correction
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         input dataset without drift correction
+#
+#     Returns
+#     ----------
+#     dataset : array_like
+#         input dataset with drift correction
+#     """
+#
+#     dataset.correct_drift()
+#
+#     return dataset
+#
+# def phase_retrieval(dataset):
+#     """Phase retrieval
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         input dataset
+#
+#     Returns
+#     ----------
+#     dataset : array_like
+#         input dataset after phase retrieval
+#     """
+#
+#     dataset.phase_retrieval()
+#
+#     return dataset
+#
+# def gridrec(dataset):
+#     """GridRec reconstruction
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         input dataset
+#
+#     Returns
+#     ----------
+#     dataset : array_like
+#         dataset with attribute "data_recon" computed
+#     """
+#
+#     dataset.gridrec()
+#
+#     return dataset
+#
+# def sirt(dataset, iters=1):
+#     """SIRT reconstruction
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         input dataset
+#
+#     iters : int, optional
+#         number of iterations
+#
+#     Returns
+#     ----------
+#     dataset : array_like
+#         dataset with attribute "data_recon" computed
+#     """
+#
+#     dataset.sirt(iters=iters)
+#
+#     return dataset
+#
+# def art(dataset, iters=1):
+#     """Art reconstruction
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         input dataset
+#
+#     iters : int, optional
+#         the number of iterations
+#
+#     Returns
+#     ----------
+#     dataset : array_like
+#         dataset with attribute "data_recon" computed
+#     """
+#
+#     dataset.art()
+#
+#     return dataset
+#
+# def save_data(dataset, file_name, axis=0):
+#     """Write reconstructed data to stack of tif files
+#
+#     Parameters
+#     ----------
+#     dataset : array_like
+#         input dataset
+#
+#     file_name : str
+#         name of output file
+#
+#     axis : int, optional
+#         the axis to read along the images
+#     """
+#
+#     # Write to stack of TIFFs.
+#     tomopy.xtomo_writer(dataset.data_recon, file_name, axis=axis)
