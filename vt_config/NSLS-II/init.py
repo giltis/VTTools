@@ -108,6 +108,13 @@ def get_modules():
                    'skxray.io.binary',
                    'skxray.api.diffraction',
                    'vttools.to_wrap.fitting',
+                   'skxray.api.image_processing.arithmetic.basic_math',
+                   'skxray.api.image_processing.arithmetic.logic',
+                   'skxray.api.image_processing.filtering',
+                   'skxray.api.image_processing.histogram',
+                   'skxray.api.image_processing.morphology',
+                   'skxray.api.image_processing.thresholding',
+                   'skxray.api.image_processing.transformation'
                    ]
 
     for mod_name in mod_targets:
