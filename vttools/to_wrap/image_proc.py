@@ -8,6 +8,9 @@ on image data sets.
 
 import numpy as np
 import parser
+from skxray.img_proc.mathops import (logical_sub, logical_nand, logical_nor)
+from numpy import (logical_xor, logical_and, logical_or, logical_not, add,
+                   subtract, multiply, divide)
 
 
 def arithmetic_basic(input_1,
@@ -52,10 +55,10 @@ def arithmetic_basic(input_1,
     -------
     result = mathops.arithmetic_basic(img_1, img_2, 'addition')
     """
-    operation_dict = {'addition' : np.add,
-                      'subtraction' : np.subtract,
-                      'multiplication' : np.multiply,
-                      'division' : np.divide
+    operation_dict = {'addition' : add,
+                      'subtraction' : subtract,
+                      'multiplication' : multiply,
+                      'division' : divide
     }
     if operation == 'division':
         if type(input_2) is np.ndarray:
@@ -239,111 +242,17 @@ def logic_basic(operation,
     -------
     result = mathops.logic_basic('and', img_1, img_2)
     """
-    logic_dict = {'and' : np.logical_and,
-                  'or' : np.logical_or,
-                  'not' : np.logical_not,
-                  'xor' : np.logical_xor,
-                  'nand' : logical_NAND,
-                  'nor' : logical_NOR,
-                  'subtract' : logical_SUB
+    logic_dict = {'and' : logical_and,
+                  'or' : logical_or,
+                  'not' : logical_not,
+                  'xor' : logical_xor,
+                  'nand' : logical_nand,
+                  'nor' : logical_nor,
+                  'subtract' : logical_sub
                   }
     output = logic_dict[operation](src_data1,
                                    src_data2)
     return output
 
-
-def logical_NAND(src_data1,
-                 src_data2):
-    """
-    This function enables the computation of the LOGICAL_NAND of two image or 
-    volume data sets. This function enables easy isolation of all data points 
-    NOT INCLUDED IN BOTH SOURCE DATA SETS. This function can be used for data 
-    comparison, material isolation, noise removal, or mask 
-    application/generation.
-
-    Parameters
-    ----------
-    src_data1 : ndarray
-        Specifies the first reference data
-
-    src_data2 : ndarray
-        Specifies the second reference data
-
-    Returns
-    -------
-    output : ndarray
-        Returns the resulting array to the designated variable
-
-    Example
-    -------
-    result = mathops.logical_NAND('img_1', 'img_2')
-    """
-    output = np.logical_not(np.logical_and(src_data1, 
-                                           src_data2))
-    return output
-
-
-def logical_NOR(src_data1,
-                 src_data2):
-    """
-    This function enables the computation of the LOGICAL_NOR of two image or
-    volume data sets. This function enables easy isolation of all data points
-    NOT INCLUDED IN EITHER OF THE SOURCE DATA SETS. This function can be used
-    for data comparison, material isolation, noise removal, or mask
-    application/generation.
-
-    Parameters
-    ----------
-    src_data1 : ndarray
-        Specifies the first reference data
-
-    src_data2 : ndarray
-        Specifies the second reference data
-
-    Returns
-    -------
-    output : ndarray
-        Returns the resulting array to the designated variable
-
-    Example
-    -------
-    result = mathops.logical_NOR('img_1', 'img_2')
-    """
-    output = np.logical_not(np.logical_or(src_data1,
-                                          src_data2))
-    return output
-
-
-def logical_SUB(src_data1,
-                src_data2):
-    """
-    This function enables LOGICAL SUBTRACTION of one binary image or volume data 
-    set from another. This function can be used to remove phase information, 
-    interface boundaries, or noise, present in two data sets, without having to 
-    worry about mislabeling of pixels which would result from arithmetic 
-    subtraction. This function will evaluate as true for all "true" voxels 
-    present ONLY in Source Dataset 1. This function can be used for data 
-    cleanup, or boundary/interface analysis.
-
-    Parameters
-    ----------
-    src_data1 : ndarray
-        Specifies the first reference data
-
-    src_data2 : ndarray
-        Specifies the second reference data
-
-    Returns
-    -------
-    output : ndarray
-        Returns the resulting array to the designated variable
-
-    Example
-    -------
-    result = mathops.logical_SUB('img_1', 'img_2')
-    """
-    temp = np.logical_not(np.logical_and(src_data1, 
-                                         src_data2))
-    output = np.logical_and(src_data1, 
-                            temp)
-    return output
+__all__ = (add, subtract, multiply, divide, logical_and, logical_or,
+           logical_nor, logical_xor, logical_not, logical_sub, logical_nand)
