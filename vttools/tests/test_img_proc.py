@@ -12,7 +12,7 @@ data collected at Argonne National Laboratory, Sector 13, GSECars.
 
 import numpy as np
 import six
-from skxray.img_proc import mathops
+import vttools.to_wrap.image_proc as img
 from numpy.testing import assert_equal, assert_raises
 
 
@@ -63,29 +63,29 @@ def test_arithmetic_basic():
     mult_check = np.multiply(test_array_1, test_constant_int)
     div_check = np.divide(test_array_1, test_constant_int)
 
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_constant_int,
                                           'addition'),
                  add_check)
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_constant_int,
                                           'subtraction'),
                  sub_check)
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_constant_int,
                                           'multiplication'),
                  mult_check)
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_constant_int,
                                           'division'),
                  div_check)
     assert_raises(ValueError,
-                  mathops.arithmetic_basic,
+                  img.arithmetic_basic,
                   test_array_1,
                   test_array_1,
                   'division')
     assert_raises(ValueError,
-                  mathops.arithmetic_basic,
+                  img.arithmetic_basic,
                   test_array_1,
                   0,
                   'division')
@@ -96,20 +96,20 @@ def test_arithmetic_basic():
     mult_check = np.multiply(test_array_1, test_array_2)
     div_check = np.divide(test_array_1, test_array_2)
 
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_array_2,
                                           'addition'),
                  add_check)
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_array_2,
                                           'subtraction'),
                  sub_check)
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_array_2,
                                           'multiplication'),
                  mult_check)
     assert_raises(ValueError,
-                  mathops.arithmetic_basic,
+                  img.arithmetic_basic,
                   test_array_2,
                   test_array_1,
                   'division')
@@ -120,19 +120,19 @@ def test_arithmetic_basic():
     mult_check = np.multiply(test_array_3, test_constant_flt)
     div_check = np.divide(test_array_3, test_constant_flt)
 
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_constant_flt,
                                           'addition'),
                  add_check)
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_constant_flt,
                                           'subtraction'),
                  sub_check)
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_constant_flt,
                                           'multiplication'),
                  mult_check)
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_constant_flt,
                                           'division'),
                  div_check)
@@ -142,40 +142,40 @@ def test_arithmetic_basic():
     mult_check = np.multiply(test_array_3, test_array_3)
     div_check = np.divide(test_array_3, test_array_3)
 
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_array_3,
                                           'addition'),
                  add_check)
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_array_3,
                                           'subtraction'),
                  sub_check)
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_array_3,
                                           'multiplication'),
                  mult_check)
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_array_3,
                                           'division'),
                  div_check)
     #Mixed dtypes: Int array and float array
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_array_1.astype(float),
                                           'addition').dtype,
                   float)
     #Float array and int constant
-    assert_equal(mathops.arithmetic_basic(test_array_3,
+    assert_equal(img.arithmetic_basic(test_array_3,
                                           test_constant_int,
                                           'addition').dtype,
                   float)
     #Int array and float constant
-    assert_equal(mathops.arithmetic_basic(test_array_1,
+    assert_equal(img.arithmetic_basic(test_array_1,
                                           test_constant_flt,
                                           'addition').dtype,
                   float)
     #Mismatched array sizes
     assert_raises(ValueError,
-                  mathops.arithmetic_basic,
+                  img.arithmetic_basic,
                   test_array_1,
                   test_array_3,
                   'addition')
@@ -210,7 +210,7 @@ def test_arithmetic_custom():
     #-int only
     result = (test_array_1 + test_array_2 + test_array_3 + test_array_4 +
               test_array_5 + test_array_6 + test_array_7 + test_array_8)
-    assert_equal(mathops.arithmetic_custom('A+B+C+D+E+F+G+H',
+    assert_equal(img.arithmetic_custom('A+B+C+D+E+F+G+H',
                                            test_array_1,
                                            test_array_2,
                                            test_array_3,
@@ -225,7 +225,7 @@ def test_arithmetic_custom():
               (test_array_3.astype(float) / 2.0) -
               test_array_4.astype(float)
     )
-    assert_equal(mathops.arithmetic_custom('(A+B)+(C/D)-E',
+    assert_equal(img.arithmetic_custom('(A+B)+(C/D)-E',
                                            test_array_1.astype(float),
                                            3.5,
                                            test_array_3.astype(float),
@@ -237,14 +237,14 @@ def test_arithmetic_custom():
               (test_array_3.astype(float) / 2) -
               test_array_4
     )
-    assert_equal(mathops.arithmetic_custom('(A+B)+(C/D)-E',
+    assert_equal(img.arithmetic_custom('(A+B)+(C/D)-E',
                                            test_array_1,
                                            3.5,
                                            test_array_3.astype(float),
                                            2,
                                            test_array_4.astype(float)),
                  result)
-    assert_equal(mathops.arithmetic_custom('(A+B)+(C/D)-E',
+    assert_equal(img.arithmetic_custom('(A+B)+(C/D)-E',
                                            test_array_1,
                                            3.5,
                                            test_array_3.astype(float),
@@ -272,21 +272,21 @@ def test_logic():
     test_array_3[40:89, 40:89, 40:89] = 3
 
     #and
-    assert_equal(mathops.logic_basic('and', test_array_1, test_array_1),
+    assert_equal(img.logic_basic('and', test_array_1, test_array_1),
                  test_array_1)
 
-    test_result = mathops.logic_basic('and', test_array_1, test_array_2)
+    test_result = img.logic_basic('and', test_array_1, test_array_2)
     assert_equal(test_result[20:39, 20:39, 20:39], True)
     assert_equal(test_result.sum(), ((39-20)**3))
 
-    test_result = mathops.logic_basic('and', test_array_1, test_array_3)
+    test_result = img.logic_basic('and', test_array_1, test_array_3)
     assert_equal(test_result, False)
 
     #or
-    assert_equal(mathops.logic_basic('or', test_array_1, test_array_1),
+    assert_equal(img.logic_basic('or', test_array_1, test_array_1),
                  test_array_1)
 
-    assert_equal(mathops.logic_basic('or',
+    assert_equal(img.logic_basic('or',
                                      test_array_1,
                                      test_array_2).sum(),
                  (test_array_1.sum() +
@@ -296,7 +296,7 @@ def test_logic():
                                  test_array_2).sum()
                  )
     )
-    test_result = mathops.logic_basic('or', test_array_1, test_array_3)
+    test_result = img.logic_basic('or', test_array_1, test_array_3)
     assert_equal(test_result.sum(),
                  (test_array_1.sum() +
                   test_array_3.sum() /
@@ -305,15 +305,15 @@ def test_logic():
     )
 
     #not
-    assert_equal(mathops.logic_basic('not', test_array_1).sum(),
+    assert_equal(img.logic_basic('not', test_array_1).sum(),
                  (90**3-test_array_1.sum()))
-    assert_equal(mathops.logic_basic('not', test_array_3).sum(),
+    assert_equal(img.logic_basic('not', test_array_3).sum(),
                  (90**3-(test_array_3.sum()/test_array_3.max())))
 
     #xor
-    assert_equal(mathops.logic_basic('xor', test_array_1, test_array_1),
+    assert_equal(img.logic_basic('xor', test_array_1, test_array_1),
                  np.zeros((90,90,90), dtype=int))
-    assert_equal(mathops.logic_basic('xor',
+    assert_equal(img.logic_basic('xor',
                                      test_array_1,
                                      test_array_2).sum(),
                  ((test_array_1.sum() +
@@ -325,15 +325,15 @@ def test_logic():
     )
 
     #nand
-    assert_equal(mathops.logic_basic('nand', test_array_1, test_array_1),
+    assert_equal(img.logic_basic('nand', test_array_1, test_array_1),
                  np.logical_not(test_array_1))
-    test_result = mathops.logic_basic('nand', test_array_1, test_array_2)
+    test_result = img.logic_basic('nand', test_array_1, test_array_2)
     assert_equal(test_result[20:39, 20:39, 20:39], False)
 
     #nor
-    assert_equal(mathops.logic_basic('nor', test_array_1, test_array_1),
+    assert_equal(img.logic_basic('nor', test_array_1, test_array_1),
                  np.logical_not(test_array_1))
-    assert_equal(mathops.logic_basic('nor',
+    assert_equal(img.logic_basic('nor',
                                      test_array_1,
                                      test_array_2).sum(),
                  (np.ones((90,90,90), dtype=int).sum() -
@@ -344,9 +344,9 @@ def test_logic():
                  )
 
     #subtract
-    assert_equal(mathops.logic_basic('subtract', test_array_1, test_array_1),
+    assert_equal(img.logic_basic('subtract', test_array_1, test_array_1),
                  False)
-    test_result = mathops.logic_basic('subtract', test_array_1, test_array_2)
+    test_result = img.logic_basic('subtract', test_array_1, test_array_2)
     assert_equal(test_result[20:39, 20:39, 20:39], False)
     assert_equal(test_result.sum(),
                  (test_array_1.sum() -
@@ -354,7 +354,7 @@ def test_logic():
                                  test_array_2).sum()
                  )
     )
-    test_result = mathops.logic_basic('subtract', test_array_1, test_array_3)
+    test_result = img.logic_basic('subtract', test_array_1, test_array_3)
     assert_equal(test_result, test_array_1)
 
 
