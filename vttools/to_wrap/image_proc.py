@@ -13,9 +13,9 @@ from numpy import (logical_xor, logical_and, logical_or, logical_not, add,
                    subtract, multiply, divide)
 
 
-def arithmetic_basic(operation,
-                     x1,
-                     x2):
+def arithmetic(operation,
+               x1,
+               x2):
     """
     This function enables basic arithmetic for image processing and data
     analysis. The function is capable of applying the basic arithmetic
@@ -92,15 +92,15 @@ def arithmetic_basic(operation,
     return output
 
 
-def arithmetic_custom(expression,
-                      A,
-                      B,
-                      C=None,
-                      D=None,
-                      E=None,
-                      F=None,
-                      G=None,
-                      H=None):
+def arithmetic_expression(expression,
+                          A,
+                          B,
+                          C=None,
+                          D=None,
+                          E=None,
+                          F=None,
+                          G=None,
+                          H=None):
     """
     This function enables more complex arithmetic to be carried out on 2 or
     more (current limit is 8) arrays or constants. The arithmetic expression
@@ -188,9 +188,9 @@ def arithmetic_custom(expression,
     return output
 
 
-def logic_basic(operation,
-                x1,
-                x2=None):
+def logic(operation,
+          x1,
+          x2=None):
     """
     This function enables the computation of the basic logical operations
     oft used in image processing of two image or volume  data sets. This
