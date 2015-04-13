@@ -8,9 +8,7 @@ on image data sets.
 
 import numpy as np
 import parser
-from skxray.img_proc.mathops import (logical_sub, logical_nand, logical_nor)
-from numpy import (logical_xor, logical_and, logical_or, logical_not, add,
-                   subtract, multiply, divide)
+from skxray.img_proc.mathops import *
 
 
 def arithmetic(operation,
@@ -236,5 +234,4 @@ def logic(operation,
                                    x2)
     return output
 
-__all__ = (add, subtract, multiply, divide, logical_and, logical_or,
-           logical_nor, logical_xor, logical_not, logical_sub, logical_nand)
+__all__ = ["arithmetic", "logic", "arithmetic_custom"]
