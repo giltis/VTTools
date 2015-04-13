@@ -128,40 +128,7 @@ def arithmetic_custom(expression,
             >= : greater than or equal
             <= : less than or equal
 
-        Additional operators:
-            = : assignment operator (assigns values from right side to those
-                on the left side)
-            += : Adds the right operand to the left operand and sets the
-                 total equal to the left operand,
-                 e.g.:
-                    b+=a is equivalent to b=a+b
-            -= : Subtracts the right operand from the left operand and sets
-                 the total equal to the left operand,
-                 e.g.:
-                    b -= a is equivalent to b = b - a
-            *= : multiplies the right operand to the left operand and sets the
-                 total equal to the left operand,
-                 e.g.:
-                    b *= a is equivalent to b = b * a
-            /= : divides the right operand into the left operand and sets the
-                 total equal to the left operand,
-                 e.g.:
-                    b /= a is equivalent to b = b / a
-            %= : divides the right operand into the left operand and sets the
-                 remainder equal to the left operand,
-                 e.g.:
-                    b %= a is equivalent to b =b % a
-            **= : raises the left operand to the power of the right operand
-                  and sets the total equal to the left operand,
-                  e.g.:
-                    b **= a is equivalent to b = b ** a
-            //= : divides the right operand into the left operand and
-                  then removes any values after the decimal point. The total
-                  is then set equal to the left operand,
-                 e.g.:
-                    b //= a is equivalent to b = b // a
-
-        In the event that bitwise operations are required the operators &,
++-        In the event that bitwise operations are required the operators &,
         |, ^, ~ may also be used, though I'm struggling to come up with a
         scenario where this will be used.
 
