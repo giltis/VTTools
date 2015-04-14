@@ -16,24 +16,6 @@ import vttools.to_wrap.image_proc as img
 from numpy.testing import assert_equal, assert_raises
 
 
-#Test Data
-test_array_1 = np.zeros((30,30,30), dtype=int)
-test_array_1[0:15, 0:15, 0:15] = 1
-test_array_2 = np.zeros((50, 70, 50), dtype=int)
-test_array_2[25:50, 25:50, 25:50] = 87
-test_array_3 = np.zeros((10,10,10), dtype=float)
-test_array_4 = np.zeros((100,100,100), dtype=float)
-test_array_5 = np.zeros((100,100), dtype=int)
-test_array_5[25:75, 25:75] = 254
-
-test_1D_array_1 = np.zeros((100), dtype=int)
-test_1D_array_2 = np.zeros((10), dtype=int)
-test_1D_array_3 = np.zeros((100), dtype=float)
-
-test_constant_int = 5
-test_constant_flt = 2.0
-test_constant_bool = True
-
 def test_arithmetic_basic():
     """
     Test function for the image processing function: arithmetic_basic
@@ -63,56 +45,31 @@ def test_arithmetic_basic():
     mult_check = np.multiply(test_array_1, test_constant_int)
     div_check = np.divide(test_array_1, test_constant_int)
 
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_constant_int,
-                                          'addition'),
+    assert_equal(img.arithmetic('addition', test_array_1, test_constant_int),
                  add_check)
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_constant_int,
-                                          'subtraction'),
-                 sub_check)
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_constant_int,
-                                          'multiplication'),
-                 mult_check)
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_constant_int,
-                                          'division'),
+    assert_equal(img.arithmetic(test_array_1, 'subtraction',
+                                test_constant_int), sub_check)
+    assert_equal(img.arithmetic('multiplication', test_array_1,
+                                test_constant_int), mult_check)
+    assert_equal(img.arithmetic('division', test_array_1, test_constant_int),
                  div_check)
-    assert_raises(ValueError,
-                  img.arithmetic_basic,
-                  test_array_1,
-                  test_array_1,
-                  'division')
-    assert_raises(ValueError,
-                  img.arithmetic_basic,
-                  test_array_1,
-                  0,
-                  'division')
+    assert_raises(ValueError, img.arithmetic,  'division', test_array_1,
+                  test_array_1)
+    assert_raises(ValueError, img.arithmetic, 'division', test_array_1, 0)
 
     #Int array and int array
     add_check = test_array_1 + test_array_2
     sub_check = np.subtract(test_array_1, test_array_2)
     mult_check = np.multiply(test_array_1, test_array_2)
-    div_check = np.divide(test_array_1, test_array_2)
 
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_array_2,
-                                          'addition'),
+    assert_equal(img.arithmetic('addition', test_array_1, test_array_2),
                  add_check)
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_array_2,
-                                          'subtraction'),
+    assert_equal(img.arithmetic('subtraction', test_array_1, test_array_2),
                  sub_check)
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_array_2,
-                                          'multiplication'),
+    assert_equal(img.arithmetic('multiplication', test_array_1, test_array_2,),
                  mult_check)
-    assert_raises(ValueError,
-                  img.arithmetic_basic,
-                  test_array_2,
-                  test_array_1,
-                  'division')
+    assert_raises(ValueError, img.arithmetic, 'division', test_array_2,
+                  test_array_1)
 
     #Float array and float constant
     add_check = test_array_3 + test_constant_flt
@@ -120,65 +77,41 @@ def test_arithmetic_basic():
     mult_check = np.multiply(test_array_3, test_constant_flt)
     div_check = np.divide(test_array_3, test_constant_flt)
 
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_constant_flt,
-                                          'addition'),
+    assert_equal(img.arithmetic('addition', test_array_3, test_constant_flt),
                  add_check)
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_constant_flt,
-                                          'subtraction'),
-                 sub_check)
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_constant_flt,
-                                          'multiplication'),
-                 mult_check)
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_constant_flt,
-                                          'division'),
+    assert_equal(img.arithmetic('substraction', test_array_3,
+                                test_constant_flt), sub_check)
+    assert_equal(img.arithmetic('multiplication', test_array_3,
+                                test_constant_flt), mult_check)
+    assert_equal(img.arithmetic('division', test_array_3, test_constant_flt),
                  div_check)
+
     #Float array and float array
     add_check = test_array_3 + test_array_3
     sub_check = np.subtract(test_array_3, test_array_3)
     mult_check = np.multiply(test_array_3, test_array_3)
     div_check = np.divide(test_array_3, test_array_3)
 
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_array_3,
-                                          'addition'),
+    assert_equal(img.arithmetic('addition', test_array_3, test_array_3),
                  add_check)
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_array_3,
-                                          'subtraction'),
+    assert_equal(img.arithmetic('subtraction', test_array_3, test_array_3,),
                  sub_check)
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_array_3,
-                                          'multiplication'),
+    assert_equal(img.arithmetic('multiplication', test_array_3, test_array_3),
                  mult_check)
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_array_3,
-                                          'division'),
+    assert_equal(img.arithmetic('division', test_array_3, test_array_3),
                  div_check)
     #Mixed dtypes: Int array and float array
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_array_1.astype(float),
-                                          'addition').dtype,
-                  float)
+    assert_equal(img.arithmetic('addition', test_array_1,
+                                test_array_1.astype(float)).dtype, float)
     #Float array and int constant
-    assert_equal(img.arithmetic_basic(test_array_3,
-                                          test_constant_int,
-                                          'addition').dtype,
-                  float)
+    assert_equal(img.arithmetic('addition', test_array_3,
+                                test_constant_int).dtype, float)
     #Int array and float constant
-    assert_equal(img.arithmetic_basic(test_array_1,
-                                          test_constant_flt,
-                                          'addition').dtype,
-                  float)
+    assert_equal(img.arithmetic('addition', test_array_1,
+                                test_constant_flt).dtype, float)
     #Mismatched array sizes
-    assert_raises(ValueError,
-                  img.arithmetic_basic,
-                  test_array_1,
-                  test_array_3,
-                  'addition')
+    assert_raises(ValueError, img.arithmetic, 'addition', test_array_1,
+                  test_array_3)
 
 
 def test_arithmetic_custom():
