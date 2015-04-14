@@ -116,10 +116,10 @@ def test_arithmetic_basic():
 
 def test_arithmetic_custom():
     """
-    Test function for mathops.arithmetic_custom, a function that allows the
-    inclusion of up to 8 inputs (arrays or constants) and application of a
-    custom expression, to simplify image arithmetic including 2 or more
-    objects or parameters.
+    Test function for vttools.to_wrap.image_proc.arithmetic_expression,
+    a function that allows the inclusion of up to 8 inputs (arrays or
+    constants) and application of a custom expression, to simplify image
+    arithmetic including 2 or more objects or parameters.
     """
     #TEST DATA
     test_array_1 = np.zeros((90,90,90), dtype=int)
@@ -143,48 +143,35 @@ def test_arithmetic_custom():
     #-int only
     result = (test_array_1 + test_array_2 + test_array_3 + test_array_4 +
               test_array_5 + test_array_6 + test_array_7 + test_array_8)
-    assert_equal(img.arithmetic_custom('A+B+C+D+E+F+G+H',
-                                           test_array_1,
-                                           test_array_2,
-                                           test_array_3,
-                                           test_array_4,
-                                           test_array_5,
-                                           test_array_6,
-                                           test_array_7,
-                                           test_array_8),
-                 result)
+
+    assert_equal(img.arithmetic_expression('A+B+C+D+E+F+G+H', test_array_1,
+                                           test_array_2, test_array_3,
+                                           test_array_4, test_array_5,
+                                           test_array_6, test_array_7,
+                                           test_array_8), result)
+
     #-float only
     result = ((test_array_1.astype(float) + 3.5) +
               (test_array_3.astype(float) / 2.0) -
-              test_array_4.astype(float)
-    )
-    assert_equal(img.arithmetic_custom('(A+B)+(C/D)-E',
-                                           test_array_1.astype(float),
-                                           3.5,
-                                           test_array_3.astype(float),
-                                           2.0,
-                                           test_array_4.astype(float)),
-                 result)
+              test_array_4.astype(float))
+
+    assert_equal(img.arithmetic_expression('(A+B)+(C/D)-E',
+                                           test_array_1.astype(float), 3.5,
+                                           test_array_3.astype(float), 2.0,
+                                           test_array_4.astype(float)), result)
+
     #-mixed int and float
-    result = ((test_array_1 + 3.5) +
-              (test_array_3.astype(float) / 2) -
-              test_array_4
-    )
-    assert_equal(img.arithmetic_custom('(A+B)+(C/D)-E',
-                                           test_array_1,
-                                           3.5,
-                                           test_array_3.astype(float),
-                                           2,
-                                           test_array_4.astype(float)),
-                 result)
-    assert_equal(img.arithmetic_custom('(A+B)+(C/D)-E',
-                                           test_array_1,
-                                           3.5,
-                                           test_array_3.astype(float),
-                                           2,
+    result = ((test_array_1 + 3.5) + (test_array_3.astype(float) / 2) -
+              test_array_4)
+
+    assert_equal(img.arithmetic_expression('(A+B)+(C/D)-E', test_array_1, 3.5,
+                                           test_array_3.astype(float), 2,
+                                           test_array_4.astype(float)), result)
+
+    assert_equal(img.arithmetic_expression('(A+B)+(C/D)-E', test_array_1, 3.5,
+                                           test_array_3.astype(float), 2,
                                            test_array_4.astype(float)).dtype,
                  float)
-
 
 
 def test_logic():
