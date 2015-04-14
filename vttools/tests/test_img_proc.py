@@ -25,7 +25,7 @@ def test_arithmetic_basic():
     test_array_1[0:15, 0:15, 0:15] = 1
     test_array_2 = np.zeros((30, 30, 30), dtype=int)
     test_array_2[15:29, 15:29, 15:29] = 87
-    test_array_3 = np.ones((30,30,30), dtype=float)
+    test_array_3 = np.ones((40,30,30), dtype=float)
     test_array_3[10:20, 10:20, 10:20] = 87.4
     test_array_4 = np.zeros((30,30), dtype=int)
     test_array_4[24:29, 24:29] = 254
@@ -47,7 +47,7 @@ def test_arithmetic_basic():
 
     assert_equal(img.arithmetic('addition', test_array_1, test_constant_int),
                  add_check)
-    assert_equal(img.arithmetic(test_array_1, 'subtraction',
+    assert_equal(img.arithmetic('subtraction', test_array_1,
                                 test_constant_int), sub_check)
     assert_equal(img.arithmetic('multiplication', test_array_1,
                                 test_constant_int), mult_check)
@@ -79,7 +79,7 @@ def test_arithmetic_basic():
 
     assert_equal(img.arithmetic('addition', test_array_3, test_constant_flt),
                  add_check)
-    assert_equal(img.arithmetic('substraction', test_array_3,
+    assert_equal(img.arithmetic('subtraction', test_array_3,
                                 test_constant_flt), sub_check)
     assert_equal(img.arithmetic('multiplication', test_array_3,
                                 test_constant_flt), mult_check)
@@ -192,89 +192,65 @@ def test_logic():
     test_array_3[40:89, 40:89, 40:89] = 3
 
     #and
-    assert_equal(img.logic_basic('and', test_array_1, test_array_1),
-                 test_array_1)
+    assert_equal(img.logic('and', test_array_1, test_array_1), test_array_1)
 
-    test_result = img.logic_basic('and', test_array_1, test_array_2)
+    test_result = img.logic('and', test_array_1, test_array_2)
     assert_equal(test_result[20:39, 20:39, 20:39], True)
     assert_equal(test_result.sum(), ((39-20)**3))
 
-    test_result = img.logic_basic('and', test_array_1, test_array_3)
-    assert_equal(test_result, False)
+    assert_equal(img.logic('and', test_array_1, test_array_3), False)
 
     #or
-    assert_equal(img.logic_basic('or', test_array_1, test_array_1),
-                 test_array_1)
+    assert_equal(img.logic('or', test_array_1, test_array_1), test_array_1)
 
-    assert_equal(img.logic_basic('or',
-                                     test_array_1,
-                                     test_array_2).sum(),
-                 (test_array_1.sum() +
-                  test_array_2.sum() /
-                  2 -
-                  np.logical_and(test_array_1,
-                                 test_array_2).sum()
-                 )
-    )
-    test_result = img.logic_basic('or', test_array_1, test_array_3)
-    assert_equal(test_result.sum(),
-                 (test_array_1.sum() +
-                  test_array_3.sum() /
-                  test_array_3.max()
-                 )
-    )
+    assert_equal(img.logic('or', test_array_1, test_array_2).sum(),
+                 (test_array_1.sum() + test_array_2.sum() / 2 -
+                  np.logical_and(test_array_1, test_array_2).sum()))
+
+    test_result = img.logic('or', test_array_1, test_array_3)
+    assert_equal(test_result.sum(), (test_array_1.sum() + test_array_3.sum() /
+                                     test_array_3.max()))
 
     #not
-    assert_equal(img.logic_basic('not', test_array_1).sum(),
+    assert_equal(img.logic('not', test_array_1).sum(),
                  (90**3-test_array_1.sum()))
-    assert_equal(img.logic_basic('not', test_array_3).sum(),
+
+    assert_equal(img.logic('not', test_array_3).sum(),
                  (90**3-(test_array_3.sum()/test_array_3.max())))
 
     #xor
-    assert_equal(img.logic_basic('xor', test_array_1, test_array_1),
+    assert_equal(img.logic('xor', test_array_1, test_array_1),
                  np.zeros((90,90,90), dtype=int))
-    assert_equal(img.logic_basic('xor',
-                                     test_array_1,
-                                     test_array_2).sum(),
-                 ((test_array_1.sum() +
-                  test_array_2.sum() / 2) -
-                  (2 * np.logical_and(test_array_1,
-                                      test_array_2).sum()
-                  )
-                 )
-    )
+
+    assert_equal(img.logic('xor', test_array_1, test_array_2).sum(),
+                 ((test_array_1.sum() + test_array_2.sum() / 2) -
+                  (2 * np.logical_and(test_array_1, test_array_2).sum())))
 
     #nand
-    assert_equal(img.logic_basic('nand', test_array_1, test_array_1),
+    assert_equal(img.logic('nand', test_array_1, test_array_1),
                  np.logical_not(test_array_1))
-    test_result = img.logic_basic('nand', test_array_1, test_array_2)
+
+    test_result = img.logic('nand', test_array_1, test_array_2)
     assert_equal(test_result[20:39, 20:39, 20:39], False)
 
     #nor
-    assert_equal(img.logic_basic('nor', test_array_1, test_array_1),
+    assert_equal(img.logic('nor', test_array_1, test_array_1),
                  np.logical_not(test_array_1))
-    assert_equal(img.logic_basic('nor',
-                                     test_array_1,
-                                     test_array_2).sum(),
+    assert_equal(img.logic('nor', test_array_1, test_array_2).sum(),
                  (np.ones((90,90,90), dtype=int).sum() -
-                  (np.logical_or(test_array_1,
-                                 test_array_2).sum()
-                  )
-                  )
-                 )
+                  (np.logical_or(test_array_1, test_array_2).sum())))
 
     #subtract
-    assert_equal(img.logic_basic('subtract', test_array_1, test_array_1),
-                 False)
-    test_result = img.logic_basic('subtract', test_array_1, test_array_2)
+    assert_equal(img.logic('subtract', test_array_1, test_array_1), False)
+
+    test_result = img.logic('subtract', test_array_1, test_array_2)
     assert_equal(test_result[20:39, 20:39, 20:39], False)
-    assert_equal(test_result.sum(),
-                 (test_array_1.sum() -
-                  np.logical_and(test_array_1,
-                                 test_array_2).sum()
-                 )
-    )
-    test_result = img.logic_basic('subtract', test_array_1, test_array_3)
+
+    assert_equal(test_result.sum(), (test_array_1.sum() -
+                                     np.logical_and(test_array_1,
+                                                    test_array_2).sum()))
+
+    test_result = img.logic('subtract', test_array_1, test_array_3)
     assert_equal(test_result, test_array_1)
 
 
