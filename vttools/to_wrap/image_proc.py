@@ -10,11 +10,12 @@ import numpy as np
 import parser
 from skxray.img_proc.mathops import *
 
+__all__ = ["arithmetic", "logic", "arithmetic_expression"]
 
-def arithmetic(operation,
-               x1,
-               x2):
-    """
+
+def arithmetic(operation, x1, x2):
+    """Basic image or object arithmetic for Vistrails image processing
+
     This function enables basic arithmetic for image processing and data
     analysis. The function is capable of applying the basic arithmetic
     operations (addition, subtraction, multiplication and division) to two
@@ -50,13 +51,9 @@ def arithmetic(operation,
             and ensure that division by zero does not occur. This function is
             typically used for offset purposes (rescaling, normalization).
 
-    x1 : {ndarray, int, float}
-        Specifies the first input data set, or constant, to be offset or
+    x1, x2 : {ndarray, int, float}
+        Specifies the input data sets, or constants, to be offset or
         manipulated
-
-    x2 : {ndarray, int, float}
-        Specifies the second data set, or constant, to be offset or manipulated
-
 
 
     Returns
@@ -66,7 +63,12 @@ def arithmetic(operation,
 
     Example
     -------
-    result = mathops.arithmetic_basic(img_1, img_2, 'addition')
+    >>> x1 = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
+    >>> x2 = np.array([[2, 0, 2], [0, 2, 0], [2, 0, 2]])
+    >>> arithmetic('addition', x1, x2)
+    array([[2, 1, 2],
+           [1, 3, 1],
+           [2, 1, 2]])
     """
     operation_dict = {'addition' : add,
                       'subtraction' : subtract,
@@ -86,20 +88,13 @@ def arithmetic(operation,
                                  "reevaluate the denominator constant"
                                  " (x2).")
 
-    output = operation_dict[operation](x1, x2)
-    return output
+    return operation_dict[operation](x1, x2)
 
 
-def arithmetic_expression(expression,
-                          A,
-                          B,
-                          C=None,
-                          D=None,
-                          E=None,
-                          F=None,
-                          G=None,
-                          H=None):
-    """
+def arithmetic_expression(expression, A, B, C=None, D=None, E=None, F=None,
+                          G=None, H=None):
+    """Arithmetic tool for VisTrails enabling use of custom expressions
+
     This function enables more complex arithmetic to be carried out on 2 or
     more (current limit is 8) arrays or constants. The arithmetic expression
     is defined by the user, as a string, and after assignment of inputs A
@@ -141,36 +136,19 @@ def arithmetic_expression(expression,
             >= : greater than or equal
             <= : less than or equal
 
-+-        In the event that bitwise operations are required the operators &,
+        In the event that bitwise operations are required the operators &,
         |, ^, ~ may also be used, though I'm struggling to come up with a
         scenario where this will be used.
 
         Order of operations and parenthesis are taken into account when
         evaluating the expression.
 
-    A : {ndarray, int, float}
+    A, B : {ndarray, int, float}
         Data set or constant to be offset or manipulated
 
-    B : {ndarray, int, float}
-        Data set or constant to be offset or manipulated
-
-    C : {ndarray, int, float}, optional
-        Data set or constant to be offset or manipulated
-
-    D : {ndarray, int, float}, optional
-        Data set or constant to be offset or manipulated
-
-    E : {ndarray, int, float}, optional
-        Data set or constant to be offset or manipulated
-
-    F : {ndarray, int, float}, optional
-        Data set or constant to be offset or manipulated
-
-    G : {ndarray, int, float}, optional
-        Data set or constant to be offset or manipulated
-
-    H : {ndarray, int, float}, optional
-        Data set or constant to be offset or manipulated
+    C, D, E, F, G, H : {ndarray, int, float}, optional
+        Optional input ports for data sets or constants to be offset or
+        manipulated using complex, custom, expressions
 
 
     Returns
@@ -180,16 +158,21 @@ def arithmetic_expression(expression,
 
     Example
     -------
-    result = mathops.arithmetic_custom('(A+C)/(B+D)', img_1, img_2, 2, 4)
+    >>> A = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
+    >>> B = np.array([[2, 0, 2], [0, 2, 0], [2, 0, 2]])
+    >>> C = 4
+    >>> D = 1.3
+    >>> arithmetic_expression('(A+C)/(B+D)', A, B, C, D)
+    array([[ 1.21212121,  3.84615385,  1.21212121],
+           [ 3.84615385,  1.51515152,  3.84615385],
+           [ 1.21212121,  3.84615385,  1.21212121]])
     """
-    output = eval(parser.expr(expression).compile())
-    return output
+    return eval(parser.expr(expression).compile())
 
 
-def logic(operation,
-          x1,
-          x2=None):
-    """
+def logic(operation, x1, x2=None):
+    """VisTrails tool for performing logical operations on image data
+
     This function enables the computation of the basic logical operations
     oft used in image processing of two image or volume  data sets. This
     function can be used for data comparison, material isolation,
@@ -206,11 +189,8 @@ def logic(operation,
             'nand' -- 2 inputs
             'subtract' -- 2 inputs
 
-    x1 : {ndarray, int, float, list, tuple}
+    x1, x2 : {ndarray, int, float, list, tuple}
         Specifies the first reference
-
-    x2 : {ndarray, int, float, list, tuple}
-        Specifies the second reference
 
     Returns
     -------
@@ -220,7 +200,11 @@ def logic(operation,
 
     Example
     -------
-    result = mathops.logic_basic('and', img_1, img_2)
+    >>> x1 = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
+    >>> logic('not', x1)
+    array([[ True, False,  True],
+          [False, False, False],
+          [ True, False,  True]], dtype=bool)
     """
     logic_dict = {'and' : logical_and,
                   'or' : logical_or,
@@ -230,8 +214,4 @@ def logic(operation,
                   'nor' : logical_nor,
                   'subtract' : logical_sub
                   }
-    output = logic_dict[operation](x1,
-                                   x2)
-    return output
-
-__all__ = ["arithmetic", "logic", "arithmetic_custom"]
+    return logic_dict[operation](x1, x2)
