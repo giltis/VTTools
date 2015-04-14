@@ -51,14 +51,14 @@ def arithmetic(operation, x1, x2):
             and ensure that division by zero does not occur. This function is
             typically used for offset purposes (rescaling, normalization).
 
-    x1, x2 : {ndarray, int, float}
+    x1, x2 : array_like
         Specifies the input data sets, or constants, to be offset or
         manipulated
 
 
     Returns
     -------
-    output : {ndarray, int, float}
+    output : array_like
         Returns the resulting array or constant to the designated variable
 
     Example
@@ -89,6 +89,7 @@ def arithmetic(operation, x1, x2):
                                  " (x2).")
 
     return operation_dict[operation](x1, x2)
+
 
 
 def arithmetic_expression(expression, A, B, C=None, D=None, E=None, F=None,
@@ -189,7 +190,7 @@ def logic(operation, x1, x2=None):
             'nand' -- 2 inputs
             'subtract' -- 2 inputs
 
-    x1, x2 : {ndarray, int, float, list, tuple}
+    x1, x2 : array_like
         Specifies the first reference
 
     Returns
