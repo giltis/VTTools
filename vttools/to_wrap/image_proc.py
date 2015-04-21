@@ -9,6 +9,12 @@ on image data sets.
 import numpy as np
 import parser
 from skxray.img_proc.mathops import *
+from scipy.ndimage.morphology import (binary_opening, binary_closing,
+                                      binary_erosion, binary_dilation,
+                                      grey_opening, grey_closing,
+                                      grey_erosion, grey_dilation,
+                                      binary_fill_holes, binary_propagation)
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -262,3 +268,41 @@ def logical(operation, x1, x2=None, out=None):
         return op(x1, out)
     else:
         return op(x1, x2, out)
+
+
+def morphology(data_type, operation, x1):
+    """ This function compiles the complete morphological tool set for image
+    processing into a single VisTrails function.
+
+    Parameters
+    ----------
+    data_type : {"binary", "grayscale"}
+        Stipulates what form the input data takes, e.g. whether it is the
+        result of previous processing and thresholding (binary) or consists
+        of a compiled label field or "raw" (grayscale) image data.
+
+    operation : {"opening", "closing", "dilation", "erosion", "hole fill", "propagation"}
+        Define the operation to be performed
+            "opening" :
+            "closing" :
+            "erosion" :
+            "dilation" :
+            "hole fill" : Binary data only
+            "propagation" : Binary data only
+
+    x1 : array-like
+        Input array.
+
+
+    Returns
+    -------
+    result : array-like
+    """
+    if data_type == "binary":
+        op = globals()["binary_" + operation]
+    elif data_type == "grayscale":
+        op = globals()["grey_" + operation]
+    return op(x1)
+
+morphology.data_type = ["binary", "grayscale"]
+morphology.operation = ["opening", "closing", "dilation", "erosion", "hole fill", "propagation"]
