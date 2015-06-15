@@ -9,100 +9,112 @@ on image data sets.
 import numpy as np
 import parser
 from skxray.img_proc.mathops import *
+import logging
 
-__all__ = ["arithmetic", "logic", "arithmetic_expression"]
+logger = logging.getLogger(__name__)
+
+__all__ = ["arithmetic", "logical", "arithmetic_expression"]
 
 
-def arithmetic(operation, x1, x2):
-    """Basic image or object arithmetic for Vistrails image processing
+def arithmetic(operation, x1, x2, div_by_zero='raise', out=None):
+    """Arithmetic for inputs x1 and x2. result = x1 {+ - / *} x2
 
-    This function enables basic arithmetic for image processing and data
-    analysis. The function is capable of applying the basic arithmetic
-    operations (addition, subtraction, multiplication and division) to two
-    data set arrays, two constants, or an array and a constant.
+    Wrapper around numpy functions `np.add`, `np.subtract`, `np.divide`,
+    `np.multiply`. As such, much of this docstring is copied from numpydocs to
+    preserve the information
 
     Parameters
     ----------
-    operation : string
-        addition:
-            The addition of EITHER two images or volume data sets,
-            OR an image/data set and a value. This function is typically
-            used for offset purposes, or basic recombination of several
-            isolated materials or phases into a single segmented volume.
-        subtraction:
-            Enables the subtraction of EITHER one image or volume data
-            set from another, OR reduction of all values in an image/data set
-            by a set value. This function is typically used for offset
-            purposes, or basic isolation of objects or materials/phases in a
-            data set.
-        multiplication:
-            Enables the multiplication of input 1 (x1) by input 2 (x2). The
-            inputs can be of any valid numpy data type (e.g. an image or
-            volume data a fixed, constant, value). This function is typically
-            used for offset purposes (rescaling), or for assigning values in
-            the generation of a labelfield identifying objects or
-            materials/phases in a data set.
-
-        division:
-            Enables the division of input 1 (x1, numerator) by input 2 (x2,
-            denominator). The inputs can be of any valid numpy data type
-            (e.g. an image or volume data a fixed, constant, value). Basic
-            tests are included in the division function which test for,
-            and ensure that division by zero does not occur. This function is
-            typically used for offset purposes (rescaling, normalization).
+    operation : {"add", "subtract", "multiply", "divide"}
+        add:
+            The sum of `x1` and `x2`, element-wise.  Returns a scalar if
+            both  `x1` and `x2` are scalars.
+            Note: Equivalent to `x1` + `x2` in terms of array broadcasting.
+        subtract:
+            The difference of `x1` and `x2`, element-wise.  Returns a scalar if
+            both  `x1` and `x2` are scalars.
+            Note: Equivalent to ``x1 - x2`` in terms of array broadcasting.
+        divide:
+            The quotient `x1/x2`, element-wise. Returns a scalar if
+            both  `x1` and `x2` are scalars.
+            Notes:
+             - Equivalent to `x1` / `x2` in terms of array-broadcasting.
+             - Behavior on division by zero can be changed using `seterr`.
+             - When both `x1` and `x2` are of an integer type, `divide` will
+               return integers and throw away the fractional part. Moreover,
+               division by zero always yields zero in integer arithmetic.
+        multiply:
+            The product of `x1` and `x2`, element-wise. Returns a scalar if
+            both  `x1` and `x2` are scalars.
+            Note: Equivalent to `x1` * `x2` in terms of array broadcasting.
 
     x1, x2 : array_like
-        Specifies the input data sets, or constants, to be offset or
-        manipulated
+        Can be floats or arrays
 
+    div_by_zero : divide : {'ignore', 'warn', 'raise'}, optional
+        Treatment for division by zero.
+
+    out : array, optional
+        Array into which the output is placed. Its type is preserved and it
+        must be of the right shape to hold the output. See numpy doc.ufuncs.
 
     Returns
     -------
-    output : array_like
+    output : array-like  # use underscores for variable names, hyphens in prose
         Returns the resulting array or constant to the designated variable
 
     Example
     -------
     >>> x1 = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
     >>> x2 = np.array([[2, 0, 2], [0, 2, 0], [2, 0, 2]])
-    >>> arithmetic('addition', x1, x2)
+    >>> arithmetic('add', x1, x2)
     array([[2, 1, 2],
            [1, 3, 1],
            [2, 1, 2]])
+    >>> arithmetic('subtract', x1, x2)
+    array([[-2,  1, -2],
+           [ 1, -1,  1],
+           [-2,  1, -2]])
+    >>> arithmetic('multiply', x1, x2)
+    array([[0, 0, 0],
+           [0, 2, 0],
+           [0, 0, 0]])
+    >>> arithmetic('divide', x1, x2, div_by_zero='raise')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "/home/edill/dev/python/VTTools/vttools/to_wrap/image_proc.py",
+      line 109, in arithmetic
+        return op(x1, x2, out)
+    FloatingPointError: divide by zero encountered in divide
+    >>> arithmetic('divide', x1, x2, div_by_zero='warn')
+    /home/edill/dev/python/VTTools/vttools/to_wrap/image_proc.py:109:
+    RuntimeWarning: divide by zero encountered in divide
+      return op(x1, x2, out)
+    array([[0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0]])
+    >>> arithmetic('divide', x1, x2, div_by_zero='ignore')
+    array([[0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0]])
     """
-    operation_dict = {'addition' : add,
-                      'subtraction' : subtract,
-                      'multiplication' : multiply,
-                      'division' : divide
-    }
-    if operation == 'division':
-        if type(x2) is np.ndarray:
-            if 0 in x2:
-                raise ValueError("This division operation will result in "
-                                 "division by zero values. Please reevaluate "
-                                 "denominator (x2).")
-        else:
-            if float(x2) == 0:
-                raise ValueError("This division operation will result in "
-                                 "division by a zero value. Please "
-                                 "reevaluate the denominator constant"
-                                 " (x2).")
-
-    return operation_dict[operation](x1, x2)
+    # ensure that inputs are numpy arrays
+    x1 = np.asarray(x1)
+    x2 = np.asarray(x2)
+    # use numpy built-in functionality to handle divide by zero problems
+    np.seterr(divide=div_by_zero)
+    # can use this one-liner instead of the mapping dictionary
+    op = getattr(np, operation)
+    return op(x1, x2, out)
 
 
+def arithmetic_expression(expression, A, B,
+                          C=None, D=None, E=None, F=None, G=None, H=None):
+    """Custom expression evaluator for up to 8 inputs A-H
 
-def arithmetic_expression(expression, A, B, C=None, D=None, E=None, F=None,
-                          G=None, H=None):
-    """Arithmetic tool for VisTrails enabling use of custom expressions
-
-    This function enables more complex arithmetic to be carried out on 2 or
-    more (current limit is 8) arrays or constants. The arithmetic expression
-    is defined by the user, as a string, and after assignment of inputs A
-    through H the string is parsed into the appropriate python expression
-    and executed.  Note that inputs C through H are optional and need only be
-    defined when desired or required.
-
+    Note that it would probably be a good idea (at some point!) to make use of
+    the `Interpreter` object in lmfit.asteval as it appears to be a rather
+    parsing tool. @danielballan can speak to this better than I can
 
     Parameters
     ----------
@@ -171,48 +183,81 @@ def arithmetic_expression(expression, A, B, C=None, D=None, E=None, F=None,
     return eval(parser.expr(expression).compile())
 
 
-def logic(operation, x1, x2=None):
-    """VisTrails tool for performing logical operations on image data
-
-    This function enables the computation of the basic logical operations
-    oft used in image processing of two image or volume  data sets. This
-    function can be used for data comparison, material isolation,
-    noise removal, or mask application/generation.
+def logical(operation, x1, x2=None, out=None):
+    """Boolean logic for inputs x1 and x2
 
     Parameters
     ----------
-    operation : str
-        options include:
-            'and' -- 2 inputs
-            'or' -- 2 inputs
-            'not' -- 1 input
-            'xor' -- 2 inputs
-            'nand' -- 2 inputs
-            'subtract' -- 2 inputs
+    operation : {'and', 'or', 'not', 'xor', `nor`, 'nand', 'sub'}
+        Binary operations:
+            and: Compute the truth value of x1 AND x2 element-wise.
+            or: Compute the truth value of x1 OR x2 element-wise.
+            xor: Compute the truth value of x1 XOR x2, element-wise.
+            nor: Compute truth value of NOT (x1 OR x2)) element wise.
+            nand: Computes the truth value of NOT (x1 AND x2) element wise.
+            sub: Compute truth value of x1 AND (NOT (x1 AND x2)) element
+                 wise.
+        Unary operations:
+            not: Compute the truth value of NOT x element-wise.
 
-    x1, x2 : array_like
-        Specifies the first reference
+    x1, x2 : array-like
+        Input arrays. `x1` and `x2` must be of the same shape.
+        Note that x2 is optional for Unary operations
+
+    out : array_like
+        An array to store the output. Must be the same shape as input arrays
 
     Returns
     -------
-    output : {ndarray, bool}
-        Returns the result of the logical operation, which can be an array,
-        or a simple boolean result.
+    output : array-like
+        Boolean result with the same shape as `x1` and `x2` of the logical
+        operation on corresponding elements of `x1` and `x2`.
+
+    See Also
+    --------
+    - User guide section on "Image Operations" (`/doc/resource/user-guide/image.rst`)
+    - numpy functions: `np.logical_and`, `np.logical_or` and `np.logical_not`,
+                       `np.logical_xor`
+    - skxray functions: `skxray.img_proc.mathops.logical_nand`,
+                        `skxray.img_proc.mathops.logical_nor, and
+                        `skxray.img_proc.mathops.logical_sub`
 
     Example
     -------
     >>> x1 = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
-    >>> logic('not', x1)
-    array([[ True, False,  True],
-          [False, False, False],
-          [ True, False,  True]], dtype=bool)
+    >>> x2 = np.array([[2, 0, 2], [0, 2, 0], [2, 0, 2]])
+    >>> logical('and', x1, x2)
+    array([[False, False, False],
+           [False,  True, False],
+           [False, False, False]], dtype=bool)
+    >>> logical('or', x1, x2)
+    array([[ True,  True,  True],
+           [ True,  True,  True],
+           [ True,  True,  True]], dtype=bool)
+    >>> logical('not', x1, x2)  # note that 'not' will ignore x2
+    array([[1, 0, 1],
+           [0, 0, 0],
+           [1, 0, 1]])
+    >>> logical('xor', x1, x2)
+    array([[ True,  True,  True],
+           [ True,  True,  True],
+           [ True,  True,  True]], dtype=bool)
+    >>> logical('xor', x1, x2)
+    array([[ True,  True,  True],
+           [ True, False,  True],
+           [ True,  True,  True]], dtype=bool)
+    >>> logical('nand', x1, x2)
+    array([[ True,  True,  True],
+           [ True,  True,  True],
+           [ True,  True,  True]], dtype=bool)
+    >>> logical('sub', x1, x2)
+    array([[False,  True, False],
+           [ True,  True,  True],
+           [False,  True, False]], dtype=bool)
     """
-    logic_dict = {'and' : logical_and,
-                  'or' : logical_or,
-                  'not' : logical_not,
-                  'xor' : logical_xor,
-                  'nand' : logical_nand,
-                  'nor' : logical_nor,
-                  'subtract' : logical_sub
-                  }
-    return logic_dict[operation](x1, x2)
+    # can use this one-liner instead of the mapping dictionary
+    op = globals()["logical_" + operation]
+    # special case the unary operations
+    if operation in {'not'}:
+        return op(x1, out)
+    return op(x1, x2, out)
