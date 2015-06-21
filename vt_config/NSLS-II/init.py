@@ -52,6 +52,7 @@ logger = logging.getLogger(__name__)
 # get modules to import
 import_dict = load_config()
 
+
 _black_list = ['who', 'mafromtxt', 'ndfromtxt', 'source',
                  'info', 'add_newdoc_ufunc', 'frombuffer',
                  'fromiter', 'frompyfunc', 'getbuffer',
@@ -103,6 +104,7 @@ def get_modules():
                    'scipy.special',
                    'scipy.stats',
                    'skxray.calibration',
+                   'skxray.image_processing.arithmetic',
                    'skxray.correlation',
                    'skxray.core',
                    'skxray.recip',
@@ -111,6 +113,7 @@ def get_modules():
                    'skxray.io.save_powder_output',
                    'skxray.io.gsas_file_reader',
                    'skxray.api.diffraction',
+                   'vttools.to_wrap.image_processing.arithmetic',
                    'vttools.to_wrap.fitting',
                    ]
 

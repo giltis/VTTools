@@ -5,13 +5,19 @@
 This module is designed to facilitate image arithmetic and logical operations
 on image data sets.
 """
-
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 import numpy as np
 import parser
-from skxray.img_proc.mathops import *
+from skxray.image_processing.arithmetic import (logical_and, logical_nand,
+                                                logical_or, logical_nor,
+                                                logical_not, logical_xor,
+                                                logical_sub, add, subtract,
+                                                multiply, divide)
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 __all__ = ["arithmetic", "logical", "arithmetic_expression"]
 
@@ -19,39 +25,39 @@ __all__ = ["arithmetic", "logical", "arithmetic_expression"]
 def arithmetic(operation, x1, x2, div_by_zero='raise', out=None):
     """Arithmetic for inputs x1 and x2. result = x1 {+ - / *} x2
 
-    Wrapper around numpy functions `np.add`, `np.subtract`, `np.divide`,
-    `np.multiply`. As such, much of this docstring is copied from numpydocs to
+    Wrapper around numpy functions 'np.add', 'np.subtract', 'np.divide',
+    'np.multiply'. As such, much of this docstring is copied from numpydocs to
     preserve the information
 
     Parameters
     ----------
     operation : {"add", "subtract", "multiply", "divide"}
         add:
-            The sum of `x1` and `x2`, element-wise.  Returns a scalar if
-            both  `x1` and `x2` are scalars.
-            Note: Equivalent to `x1` + `x2` in terms of array broadcasting.
+            The sum of 'x1' and 'x2', element-wise.  Returns a scalar if
+            both  'x1' and 'x2' are scalars.
+            Note: Equivalent to 'x1' + 'x2' in terms of array broadcasting.
         subtract:
-            The difference of `x1` and `x2`, element-wise.  Returns a scalar if
-            both  `x1` and `x2` are scalars.
-            Note: Equivalent to ``x1 - x2`` in terms of array broadcasting.
+            The difference of 'x1' and 'x2', element-wise.  Returns a scalar if
+            both  'x1' and 'x2' are scalars.
+            Note: Equivalent to ''x1 - x2'' in terms of array broadcasting.
         divide:
-            The quotient `x1/x2`, element-wise. Returns a scalar if
-            both  `x1` and `x2` are scalars.
+            The quotient 'x1/x2', element-wise. Returns a scalar if
+            both  'x1' and 'x2' are scalars.
             Notes:
-             - Equivalent to `x1` / `x2` in terms of array-broadcasting.
-             - Behavior on division by zero can be changed using `seterr`.
-             - When both `x1` and `x2` are of an integer type, `divide` will
+             - Equivalent to 'x1' / 'x2' in terms of array-broadcasting.
+             - Behavior on division by zero can be changed using 'seterr'.
+             - When both 'x1' and 'x2' are of an integer type, 'divide' will
                return integers and throw away the fractional part. Moreover,
                division by zero always yields zero in integer arithmetic.
         multiply:
-            The product of `x1` and `x2`, element-wise. Returns a scalar if
-            both  `x1` and `x2` are scalars.
-            Note: Equivalent to `x1` * `x2` in terms of array broadcasting.
+            The product of 'x1' and 'x2', element-wise. Returns a scalar if
+            both  'x1' and 'x2' are scalars.
+            Note: Equivalent to 'x1' * 'x2' in terms of array broadcasting.
 
-    x1, x2 : array_like
+    x1, x2 : array
         Can be floats or arrays
 
-    div_by_zero : divide : {'ignore', 'warn', 'raise'}, optional
+    div_by_zero : {'ignore', 'warn', 'raise'}, optional
         Treatment for division by zero.
 
     out : array, optional
@@ -60,7 +66,7 @@ def arithmetic(operation, x1, x2, div_by_zero='raise', out=None):
 
     Returns
     -------
-    output : array-like  # use underscores for variable names, hyphens in prose
+    output : array  # use underscores for variable names, hyphens in prose
         Returns the resulting array or constant to the designated variable
 
     Example
@@ -82,12 +88,12 @@ def arithmetic(operation, x1, x2, div_by_zero='raise', out=None):
     >>> arithmetic('divide', x1, x2, div_by_zero='raise')
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "/home/edill/dev/python/VTTools/vttools/to_wrap/image_proc.py",
+      File "/home/edill/dev/python/VTTools/vttools/to_wrap/arithmetic.py",
       line 109, in arithmetic
         return op(x1, x2, out)
     FloatingPointError: divide by zero encountered in divide
     >>> arithmetic('divide', x1, x2, div_by_zero='warn')
-    /home/edill/dev/python/VTTools/vttools/to_wrap/image_proc.py:109:
+    /home/edill/dev/python/VTTools/vttools/to_wrap/arithmetic.py:109:
     RuntimeWarning: divide by zero encountered in divide
       return op(x1, x2, out)
     array([[0, 0, 0],
@@ -113,12 +119,12 @@ def arithmetic_expression(expression, A, B,
     """Custom expression evaluator for up to 8 inputs A-H
 
     Note that it would probably be a good idea (at some point!) to make use of
-    the `Interpreter` object in lmfit.asteval as it appears to be a rather
+    the 'Interpreter' object in lmfit.asteval as it appears to be a rather
     parsing tool. @danielballan can speak to this better than I can
 
     Parameters
     ----------
-    expression : string
+    expression : str
         Note that the syntax of the mathematical expression must conform to
         python syntax,
         eg.:
@@ -188,7 +194,7 @@ def logical(operation, x1, x2=None, out=None):
 
     Parameters
     ----------
-    operation : {'and', 'or', 'not', 'xor', `nor`, 'nand', 'sub'}
+    operation : {'and', 'or', 'not', 'xor', 'nor', 'nand', 'sub'}
         Binary operations:
             and: Compute the truth value of x1 AND x2 element-wise.
             or: Compute the truth value of x1 OR x2 element-wise.
@@ -200,27 +206,28 @@ def logical(operation, x1, x2=None, out=None):
         Unary operations:
             not: Compute the truth value of NOT x element-wise.
 
-    x1, x2 : array-like
-        Input arrays. `x1` and `x2` must be of the same shape.
+    x1, x2 : array
+        Input arrays. 'x1' and 'x2' must be of the same shape.
         Note that x2 is optional for Unary operations
 
-    out : array_like
+    out : array
         An array to store the output. Must be the same shape as input arrays
 
     Returns
     -------
-    output : array-like
-        Boolean result with the same shape as `x1` and `x2` of the logical
-        operation on corresponding elements of `x1` and `x2`.
+    output : array
+        Boolean result with the same shape as 'x1' and 'x2' of the logical
+        operation on corresponding elements of 'x1' and 'x2'.
 
     See Also
     --------
-    - User guide section on "Image Operations" (`/doc/resource/user-guide/image.rst`)
-    - numpy functions: `np.logical_and`, `np.logical_or` and `np.logical_not`,
-                       `np.logical_xor`
-    - skxray functions: `skxray.img_proc.mathops.logical_nand`,
-                        `skxray.img_proc.mathops.logical_nor, and
-                        `skxray.img_proc.mathops.logical_sub`
+        - User guide section on "Image Operations"
+            ('/doc/resource/user-guide/image.rst')
+        - numpy functions: 'np.logical_and', 'np.logical_or', 'np.logical_not',
+                           and 'np.logical_xor'
+        - skxray functions: 'skxray.image_processing.arithmetic.logical_nand',
+                            'skxray.image_processing.arithmetic.logical_nor', and
+                            'skxray.image_processing.arithmetic.logical_sub'
 
     Example
     -------
@@ -255,6 +262,7 @@ def logical(operation, x1, x2=None, out=None):
            [ True,  True,  True],
            [False,  True, False]], dtype=bool)
     """
+
     # can use this one-liner instead of the mapping dictionary
     op = globals()["logical_" + operation]
     # special case the unary operations
