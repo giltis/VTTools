@@ -11,9 +11,9 @@ data collected at Argonne National Laboratory, Sector 13, GSECars.
 """
 
 import numpy as np
-import six
-import vttools.to_wrap.image_proc as img
 from numpy.testing import assert_equal, assert_raises, raises
+
+import vttools.to_wrap.image_processing.arithmetic as img
 
 
 @raises(AttributeError)
