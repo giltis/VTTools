@@ -223,11 +223,13 @@ def logical(operation, x1, x2=None, out=None):
     --------
         - User guide section on "Image Operations"
             ('/doc/resource/user-guide/image.rst')
+            ** TODO: This needs to be updated when there are sphinx docs for
+               these tools.**
         - numpy functions: 'np.logical_and', 'np.logical_or', 'np.logical_not',
                            and 'np.logical_xor'
         - skxray functions: 'skxray.image_processing.arithmetic.logical_nand',
-                            'skxray.image_processing.arithmetic.logical_nor', and
-                            'skxray.image_processing.arithmetic.logical_sub'
+                            'skxray.image_processing.arithmetic.logical_nor',
+                            and 'skxray.image_processing.arithmetic.logical_sub'
 
     Example
     -------
