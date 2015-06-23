@@ -118,9 +118,9 @@ def arithmetic_expression(expression, A, B,
                           C=None, D=None, E=None, F=None, G=None, H=None):
     """Custom expression evaluator for up to 8 inputs A-H
 
-    Note that it would probably be a good idea (at some point!) to make use of
-    the 'Interpreter' object in lmfit.asteval as it appears to be a rather
-    parsing tool. @danielballan can speak to this better than I can
+    TODO: Note that using the 'Interpreter' object in lmfit.asteval may be a
+    cleaner and more effective parsing tool for evaluating the input
+    expression.
 
     Parameters
     ----------
