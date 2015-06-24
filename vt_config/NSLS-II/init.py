@@ -119,7 +119,8 @@ def get_modules():
                    'skxray.api.image_processing.arithmetic.logic',
                    'skxray.api.image_processing.filtering',
                    'skxray.api.image_processing.morphology',
-                   'skxray.api.image_processing.registration'
+                   'skxray.api.image_processing.registration',
+                   'skxray.api.image_processing.thresholding'
                    ]
 
     for mod_name in mod_targets:
