@@ -117,7 +117,41 @@ class FindData(Module):
 
         self.set_output("file path", file_path)
 
+class ReadNetCDF(Module):
+    _settings = ModuleSettings(namespace="io")
+    _input_ports = [
+        IPort(name="file name", label="File name and path",
+              signature="basic:String"),
+    ]
+    _output_ports = [
+        OPort(name="data", signature="basic:Variant"),
+        OPort(name="metadata dictionary", signature="basic:Variant"),
+    ]
+
+    def compute(self):
+        file_name = self.get_input("file name")
+        data = read_netCDF(file_name)
+        self.set_output("data", data)
+        self.set_output("metadata dictionary", md_dict)
+
+
+class ReadAmiraMesh(Module):
+    _settings = ModuleSettings(namespace="io")
+    _input_ports = [
+        IPort(name="file name", label="File name and path",
+              signature="basic:String"),
+    ]
+    _output_ports = [
+        OPort(name="data", signature="basic:Variant"),
+        OPort(name="metadata dictionary", signature="basic:Variant"),
+    ]
+
+    def compute(self):
+        file_name = self.get_input("file name")
+        md_dict, data = read_netCDF(file_name)
+        self.set_output("data", data)
+        self.set_output("metadata dictionary", md_dict)
 
 
 def vistrails_modules():
-    return [ReadTiff, ReadNumpy, FindData]
+    return [ReadTiff, ReadNumpy, FindData, ReadNetCDF, ReadAmiraMesh]
